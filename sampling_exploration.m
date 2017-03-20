@@ -1,19 +1,18 @@
-%==========================================================================
+% This function generates samples for exploration of design space.
+% Usage: xf = SAMPLING_EXPLORATION(problem,k,(prevPoints))
+% Input: problem,k,(prevPoints)
+% Output: xf
+%   problem: problem definition structure
+%   k: if initial sampling, k=0
+%   prevPoints: if k>0, prevPoints matrix is required
+%   xf: sample points for exploration of design space
+
 % Multiobjective Adaptive Surrogate Modeling-based Optimization Toolbox I
-% Author: Yong Hoon Lee (ylee196@illinois.edu)
+% Author: Yong Hoon Lee (ylee196@illinois.edu, yonghoonlee@outlook.com)
 % Please refer to LICENSE.TXT for licensing details.
 % Some directories may include codes from different author or with
 % different license. In this case, please refer to LICENSE file or
 % LICENSE.TXT file in each corresponding subdirectories.
-%==========================================================================
-% SAMPLING_EXPLORATION FUNCTION
-%==========================================================================
-% This function generates samples for exploration of design space
-% Input: problem, k, (prevPoints)
-%   k: if initial sampling, k=0
-%   prevPoints: if k>0, prevPoints matrix is required
-% Output: xf
-%==========================================================================
 
 function xf = sampling_exploration(problem,k,varargin)
     if (k == 0)
@@ -64,7 +63,8 @@ function xf = sampling_exploration(problem,k,varargin)
                     end
                     ex = min(ex,e);
                     if (problem.control.verbose == 2)
-                        disp(strcat('exitflag:',num2str(e),'/objfn:',num2str(f)));
+                        disp(strcat('exitflag:',num2str(e),...
+                                    '/objfn:',num2str(f)));
                     end
                 end
             end

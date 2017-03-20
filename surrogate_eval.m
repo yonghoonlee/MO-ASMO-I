@@ -1,20 +1,17 @@
-%==========================================================================
+% This function evaluates surrogate model for given input.
+% Usage: f = SURROGATE_EVAL(x,SM)
+% Input: x,SM
+% Output: f
+%   x: Input design points for evaluating surrogate model
+%   SM: Surrogate model data structure
+%   f: Predicted objective function value for given x using surrogate model
+
 % Multiobjective Adaptive Surrogate Modeling-based Optimization Toolbox I
-% Author: Yong Hoon Lee (ylee196@illinois.edu)
+% Author: Yong Hoon Lee (ylee196@illinois.edu, yonghoonlee@outlook.com)
 % Please refer to LICENSE.TXT for licensing details.
 % Some directories may include codes from different author or with
 % different license. In this case, please refer to LICENSE file or
 % LICENSE.TXT file in each corresponding subdirectories.
-%==========================================================================
-% SURROGATE_EVAL FUNCTION
-%==========================================================================
-% This function evaluates surrogate model for given input
-% Input: x, SM
-%   x: design input
-%   SM: surrogate model data structure
-% Output: MO
-%   f: surrogate model response at the design point x
-%==========================================================================
 
 function f = surrogate_eval(x,SM)
     switch lower(SM.method)

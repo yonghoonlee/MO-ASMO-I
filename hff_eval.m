@@ -1,18 +1,17 @@
-%==========================================================================
+% This function runs high fidelity fn to evaluate given design points.
+% Usage: f = HFF_EVAL(x,problem)
+% Input: x,problem
+% Output: f
+%   x: given design points for high fidelity function evaluation
+%   problem: problem definition structure
+%   f: high fidelity function results of given design points
+
 % Multiobjective Adaptive Surrogate Modeling-based Optimization Toolbox I
-% Author: Yong Hoon Lee (ylee196@illinois.edu)
+% Author: Yong Hoon Lee (ylee196@illinois.edu, yonghoonlee@outlook.com)
 % Please refer to LICENSE.TXT for licensing details.
 % Some directories may include codes from different author or with
 % different license. In this case, please refer to LICENSE file or
 % LICENSE.TXT file in each corresponding subdirectories.
-%==========================================================================
-% HFF_EVAL FUNCTION
-%==========================================================================
-% This function runs high fidelity function to evaluate designs
-% Input: x, problem
-%   x: designs for high fidelity function evaluation
-% Output: f
-%==========================================================================
 
 function f = hff_eval(x,problem)
     if (problem.control.verbose > 0)

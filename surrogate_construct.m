@@ -1,20 +1,18 @@
-%==========================================================================
+% This function constructs a surrogate model based on training samples.
+% Usage: SM = SURROGATE_CONSTRUCT(x,f,problem)
+% Input: x,SM
+% Output: f
+%   x: Training sample points in design space
+%   f: Training sample points in objective function space
+%   problem: problem definition structure
+%   SM: Surrogate model data structure
+
 % Multiobjective Adaptive Surrogate Modeling-based Optimization Toolbox I
 % Author: Yong Hoon Lee (ylee196@illinois.edu)
 % Please refer to LICENSE.TXT for licensing details.
 % Some directories may include codes from different author or with
 % different license. In this case, please refer to LICENSE file or
 % LICENSE.TXT file in each corresponding subdirectories.
-%==========================================================================
-% SURROGATE_CONSTRUCT FUNCTION
-%==========================================================================
-% This function constructs a surrogate model based on training samples
-% Input: x, f, problem
-%   x: design variables of training samples
-%   f: high-fidelity function evaluation results of training samples
-% Output: SM
-%   SM: surrogate model data structure
-%==========================================================================
 
 function SM = surrogate_construct(x,f,problem)
     if (problem.control.verbose > 0)

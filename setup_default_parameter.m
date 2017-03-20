@@ -1,25 +1,25 @@
-%==========================================================================
+% This function initializes global parameters to the default preset values.
+% Problem-specific parameters can be overrided by "settings.m" function in
+% the problem directory.
+% Usage: problem = SETUP_DEFAULT_PARAMETER(problem)
+% Input: problem
+% Output: problem
+%   problem: problem definition structure
+
 % Multiobjective Adaptive Surrogate Modeling-based Optimization Toolbox I
-% Author: Yong Hoon Lee (ylee196@illinois.edu)
+% Author: Yong Hoon Lee (ylee196@illinois.edu, yonghoonlee@outlook.com)
 % Please refer to LICENSE.TXT for licensing details.
 % Some directories may include codes from different author or with
 % different license. In this case, please refer to LICENSE file or
 % LICENSE.TXT file in each corresponding subdirectories.
-%==========================================================================
-% SETUP_PARAMETER FUNCTION
-%==========================================================================
-% This function initializes global parameters to the default preset values.
-% Problem-specific parameters can be overrided by "settings.m" function in
-% the problem directory.
-% Input: problem structure
-% Output: problem structure
-%==========================================================================
 
 function problem = setup_default_parameter(problem)
     fprintf('%s','Setup parameter...');
     
-    problem.control.verbose = 2;            % 0:no, 1:yes, 2:debug
+    problem.control.verbose = 2;            % 0:no, 1:yes, [2:debug]
     problem.control.maxiter = 20;           % maximum number of iterations
+    problem.control.plot = 1;               % 0:no, [1:yes]
+    problem.control.plotexport = 1;         % 0:no, [1:yes]
     
     problem.highfidelity.expensive = 1;     % 0:no, [1:yes] (expensive)
     problem.highfidelity.vectorized = 0;    % [0:no], 1:yes
@@ -46,8 +46,8 @@ function problem = setup_default_parameter(problem)
         % MQ (multiquadric), InvMQ (inverse multiquadric), user-defined
     
     opt = gaoptimset(@gamultiobj);
-    opt.PopulationSize = 3000;
-    opt.CrossoverFraction = 0.85;
+    opt.PopulationSize = min(max(1000,500*problem.nxvar),10000); % [1k,10k]
+    opt.CrossoverFraction = 0.25;
     opt.ParetoFraction = 0.1;
     opt.Generations = 200;
     opt.StallGenLimit = 20;
@@ -65,25 +65,10 @@ function problem = setup_default_parameter(problem)
         opt.PlotFcns = [];
         opt.Display = 'off';
     end
-    if (hff_getpoolsize() ~= 0)
-        opt.UseParallel = true;
-    end
-    problem.gamultiobj.opt = opt;
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    problem.gamultiobj.opt = opt;
-    
-    
+    problem.gamultiobj.opt = opt;           % Save options generated
+    problem.gamultiobj.parallel = 0;        % [0:vectorize], 1:parallel
+                                            % In most cases, vectorization
+                                            % will be faster than parallel
     
     fprintf('%s\n','done');
 end

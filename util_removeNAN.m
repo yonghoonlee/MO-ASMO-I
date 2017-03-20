@@ -1,20 +1,20 @@
-%==========================================================================
+% This function removes infeasible (NaN) sample points
+% Usage: [X,F,(XX)] = UTIL_REMOVENAN(x,f,(xx))
+% Input: x, f, problem, xx
+% Output: [X, F, XX]
+%   x: points in design space
+%   f: points in objective function space
+%   xx: additional data to be treated
+%   X: points in design space without NaN
+%   F: points in objective function space without NaN
+%   XX: additional data without NaN
+
 % Multiobjective Adaptive Surrogate Modeling-based Optimization Toolbox I
-% Author: Yong Hoon Lee (ylee196@illinois.edu)
+% Author: Yong Hoon Lee (ylee196@illinois.edu, yonghoonlee@outlook.com)
 % Please refer to LICENSE.TXT for licensing details.
 % Some directories may include codes from different author or with
 % different license. In this case, please refer to LICENSE file or
 % LICENSE.TXT file in each corresponding subdirectories.
-%==========================================================================
-% UTIL_REMOVENAN FUNCTION
-%==========================================================================
-% This function removes infeasible (NaN) sample points
-% Input: x, f, problem, xx
-%   x: designs points
-%   f: result of function evaluation
-%   xx: additional data to be treated
-% Output: [X, F, XX]
-%==========================================================================
 
 function [X,F,XX] = util_removeNAN(x,f,problem,varargin)
     if (problem.control.verbose > 0)
