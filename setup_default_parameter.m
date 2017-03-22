@@ -20,6 +20,7 @@ function problem = setup_default_parameter(problem)
     problem.control.maxiter = 20;           % maximum number of iterations
     problem.control.plot = 1;               % 0:no, [1:yes]
     problem.control.plotexport = 1;         % 0:no, [1:yes]
+    problem.control.savedata = 1;           % 0:no, [1:yes]
     
     problem.highfidelity.expensive = 1;     % 0:no, [1:yes] (expensive)
     problem.highfidelity.vectorized = 0;    % [0:no], 1:yes
@@ -34,9 +35,9 @@ function problem = setup_default_parameter(problem)
     
     problem.sampling.valnumber = 10;
     
-    problem.sampling.upmethod = 'FDL';
+    problem.sampling.upmethod = 'FDL';      % ['FDL'], 'CDD'
     problem.sampling.upnumber = 5;
-    problem.sampling.upexpmethod = 'LHS';
+    problem.sampling.upexpmethod = 'LHS';   % ['LHS']
     problem.sampling.upexpnumber = 5;
     
     problem.surrogate.method = 'RBF';

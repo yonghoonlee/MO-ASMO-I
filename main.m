@@ -36,8 +36,8 @@ plot_preparation;                               % Plot preparation script
 % Column  8:  Error between (Col. 6) and (Col. 7)
 % Column  9:  Validation samples in design space
 % Column 10:  Validation samples in objective function space
-% Column 11:  
-% Column 12:  
+% Column 11:  High fidelity function evaluation results of (Col. 9)
+% Column 12:  Error between (Col. 10) and (Col. 11)
 % Column 13:  Time measurement data
 %   sub-column  1:  High-fidelity function evaluation for generated samples
 %   sub-column  2:  Surrogate model SM construction using data (Col. 3,4)
@@ -45,6 +45,7 @@ plot_preparation;                               % Plot preparation script
 %   sub-column  4:  Multiobjective optimization on the surrogate model SM
 %   sub-column  5:  (High-fidelity fn evaluation for predicted Pareto set)
 %   sub-column  6:  Sampling for validation
+%   sub-column  7:  Sampling for update
 % Column 14:  Initial population given to the genetic algorithm
 
 % Initialize
@@ -91,10 +92,10 @@ while(k<problem.control.maxiter)
             initpop = vertcat(initpop, DATA{k,3}(idx,:));
         end
         [initpop,~,~] = unique(initpop,'rows'); % Make each item unique
-        DATA{k,14} = initpop;                   % Save initial populations
     else
         initpop = [];
     end
+    DATA{k,14} = initpop;                       % Save initial populations
     DATA{k,13} = [DATA{k,13}, toc];
     
     % Multiobjective optimization running on the surrogate model
@@ -107,14 +108,14 @@ while(k<problem.control.maxiter)
     clear tmpdat;
     DATA{k,13} = [DATA{k,13}, toc];
     
-    % (Optional) high-fidelity fn evaluation for the predicted Pareto set
+    % (Optional) high fidelity fn evaluation for the predicted Pareto set
     tic;
     if (~problem.highfidelity.expensive)
-        DATA{k,7} = hff_eval(DATA{k,5},problem);% High-fidelity fn eval
+        DATA{k,7} = hff_eval(DATA{k,5},problem);% High fidelity fn eval
         [DATA{k,5},DATA{k,7},DATA{k,6}] ...
             = util_removeNAN(DATA{k,5},DATA{k,7},problem,DATA{k,6});
-        DATA{k,8} ...
-            = sum(sqrt(sum((DATA{k,7}-DATA{k,6}).^2,2)))/size(DATA{k,7},1);
+        DATA{k,8} = sum(sqrt(sum((DATA{k,7}-DATA{k,6}).^2,2)))...
+            /size(DATA{k,7},1);                 % Error computation
     end
     DATA{k,13} = [DATA{k,13}, toc];
     
@@ -126,6 +127,30 @@ while(k<problem.control.maxiter)
     % Validation sampling
     tic;
     [DATA{k,9},DATA{k,10}] = sampling_val(DATA{k,5},DATA{k,6},problem);
+    DATA{k,11} = hff_eval(DATA{k,9},problem);   % High fidelity fn eval
+    [DATA{k,9},DATA{k,11},DATA{k,10}] ...
+        = util_removeNAN(DATA{k,9},DATA{k,11},problem,DATA{k,10});
+    DATA{k,12} = sum(sqrt(sum((DATA{k,11}-DATA{k,10}).^2,2)))...
+        /size(DATA{k,11},1);                    % Error computation
     DATA{k,13} = [DATA{k,13}, toc];
+    
+    % Generate figures of validation sample points
+    if (problem.control.plot ~= 0)
+        plot_validation;
+    end
+    
+    % Update sampling
+    tic;
+    prevPoints = [DATA{k,3};DATA{k,9}];
+    DATA{k+1,1} = [sampling_exploitation(DATA{k,5},problem);
+                   sampling_exploration(problem,k,[DATA{k,3};DATA{k,9}])];
+    DATA{k,13} = [DATA{k,13}, toc];
+    
+    if (problem.control.savedata ~= 0)
+        for i = 1:14
+            D{1,i} = DATA{k,i};
+        end
+        save([fullfile(problem.probpath,'DATA_'),num2str(k)],'D','k');
+    end
     
 end

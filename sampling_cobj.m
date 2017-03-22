@@ -17,7 +17,7 @@
 % LICENSE.TXT file in each corresponding subdirectories.
 
 function f = sampling_cobj(x,x0,wei1,wei2,prevPoints)
-    xm = repmat(x',size(prevPoints,1),1);
+    xm = repmat(x,size(prevPoints,1),1);
     f1 = wei1*sum((x - x0).^2);
     if (size(prevPoints,1) == 0)
         f2 = 0;

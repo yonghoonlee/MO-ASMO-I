@@ -15,6 +15,9 @@
 % LICENSE.TXT file in each corresponding subdirectories.
 
 function xf = sampling_exploration(problem,k,varargin)
+    if (problem.control.verbose > 0)
+        fprintf('Sampling for exploration...');
+    end
     if (k == 0)
         method = problem.sampling.initmethod;
         number = problem.sampling.initnumber;
@@ -72,5 +75,7 @@ function xf = sampling_exploration(problem,k,varargin)
             error(strcat(method,'::not supported.'));
     end
     if (problem.control.verbose == 2); fprintf('...'); end
-    fprintf('%s\n','done');
+    if (problem.control.verbose > 0)
+        fprintf('%s\n','done');
+    end
 end
