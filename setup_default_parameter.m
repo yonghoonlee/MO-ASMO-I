@@ -70,6 +70,7 @@ function problem = setup_default_parameter(problem)
     problem.gamultiobj.parallel = 0;        % [0:vectorize], 1:parallel
                                             % In most cases, vectorization
                                             % will be faster than parallel
+    problem.p = [];
     
     fprintf('%s\n','done');
 end

@@ -30,21 +30,21 @@ function f = hff_eval(x,problem)
                 fprintf('%s','serial...');
             end
             for i = 1:nx
-                result = feval(problem.objfun,x(i,:));
+                result = feval(problem.objfun,x(i,:),problem.p);
                 f(i,:) = reshape(result,1,mf);
             end
         else
             if (problem.control.verbose > 0)
                 fprintf('%s','serial-vectorized...');
             end
-            f = feval(problem.objfun,x);
+            f = feval(problem.objfun,x,problem.p);
         end
     else
         if (problem.control.verbose > 0)
             fprintf('%s','parallel...');
         end
         parfor i = 1:nx
-            result = feval(problem.objfun,x(i,:));
+            result = feval(problem.objfun,x(i,:),problem.p);
             f(i,:) = reshape(result,1,mf);
         end
     end

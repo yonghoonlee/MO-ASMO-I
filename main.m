@@ -12,7 +12,8 @@
 clear; clc; close all; restoredefaultpath;
 
 % Problem path is determined as "./Problems/{problem.name}"
-problem.name = 'OsyczkaKundu';  % 'OsyczkaKundu', 'Lee2017a', 'Corman2016a'
+problem.name = 'LeeCormanAllison2017a';  % 'OsyczkaKundu', 'Lee2017a',
+                                % 'LeeCormanAllison2017a'
                                 % or user-defined problems can be solved.
 problem = setup_problem(problem);               % Load problem definition
 problem = setup_default_parameter(problem);     % Load default params

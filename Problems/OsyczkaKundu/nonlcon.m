@@ -16,7 +16,7 @@
 % different license. In this case, please refer to LICENSE file or
 % LICENSE.TXT file in each corresponding subdirectories.
 
-function [c,ceq] = nonlcon(x)
+function [c,ceq] = nonlcon(x,p)
     c = [(x(:,3) - 3).^2 + x(:,4) - 4, ...
         -(x(:,5) - 3).^2 - x(:,6) + 4];
     ceq = [];
