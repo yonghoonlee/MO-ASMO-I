@@ -34,8 +34,8 @@ function problem = settings(problem)
     problem.p.road_x = road_x;              % Road profile in x [m]
     problem.p.road_z = road_z;              % Road profile in z [m]
     
-    problem.plotrange.xmin = 0;
+    problem.plotrange.xmin = 0.1;
     problem.plotrange.xmax = 1;
-    problem.plotrange.ymin = 0;
-    problem.plotrange.ymax = 1;
+    problem.plotrange.ymin = 0.1;
+    problem.plotrange.ymax = 0.25;
 end

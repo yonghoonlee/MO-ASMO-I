@@ -12,15 +12,18 @@
 clear; clc; close all; restoredefaultpath;
 
 % Problem path is determined as "./Problems/{problem.name}"
-problem.name = 'LeeCormanAllison2017a';  % 'OsyczkaKundu', 'Lee2017a',
-                                % 'LeeCormanAllison2017a'
-                                % or user-defined problems can be solved.
+problem.name = 'LeeCormanAllison2017a';
+                        % Options:  problem.name = 'OsyczkaKundu';
+                        %           problem.name = 'Lee2017a';
+                        %           problem.name = 'LeeCormanAllison2017a';
+                        %           or user-defined problems can be solved.
+% Process problem structure
 problem = setup_problem(problem);               % Load problem definition
 problem = setup_default_parameter(problem);     % Load default params
 problem = feval(problem.settingsfun,problem);   % Problem-specific params
 
 % Random seed control
-randomseedfrontfactor = 0;                      % non-negative integers
+randomseedfrontfactor = 1;                      % non-negative integers
 rng(randomseedfrontfactor*100+0);               % Controlled random stream
 
 % Prepare plotting

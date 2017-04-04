@@ -56,14 +56,14 @@ function xf = sampling_FDL(xP,number,problem)
     end
     for iloop = 1:1000
 
-        % For debug
-        if (problem.control.verbose == 2)
-            subplot(2,1,1); hold off; plot3(xPS(:,1),xPS(:,2),xPS(:,3),'rx'); hold on; plot3(xB(:,1),xB(:,2),xB(:,3),'bo'); plot3(xM(:,1),xM(:,2),xM(:,3),'k.'); axis([-0.2 1.2 -0.2 1.2 -0.2 1.2]); xlabel('x1'); ylabel('x2'); zlabel('x3');
-            for kk = 1:size(xB,1); plot3([xB(kk,1);xM(kk,1)],[xB(kk,2);xM(kk,2)],[xB(kk,3);xM(kk,3)],'k-'); end;
-            %for kk = 1:size(xM,1); for ll = 1:size(xM,1); if (kk ~= ll); plot3([xM(kk,1);xM(ll,1)],[xM(kk,2);xM(ll,2)],[xM(kk,3);xM(ll,3)],'c:'); end; end; end;
-            subplot(2,1,2); hold off; plot3(xPS(:,4),xPS(:,5),xPS(:,6),'rx'); hold on; plot3(xB(:,4),xB(:,5),xB(:,6),'bo'); plot3(xM(:,4),xM(:,5),xM(:,6),'k.'); axis([-0.2 1.2 -0.2 1.2 -0.2 1.2]); xlabel('x4'); ylabel('x5'); zlabel('x6');
-            for kk = 1:size(xB,1); plot3([xB(kk,4);xM(kk,4)],[xB(kk,5);xM(kk,5)],[xB(kk,6);xM(kk,6)],'k-'); end;
-        end
+%         % For debug
+%         if (problem.control.verbose == 2)
+%             subplot(2,1,1); hold off; plot3(xPS(:,1),xPS(:,2),xPS(:,3),'rx'); hold on; plot3(xB(:,1),xB(:,2),xB(:,3),'bo'); plot3(xM(:,1),xM(:,2),xM(:,3),'k.'); axis([-0.2 1.2 -0.2 1.2 -0.2 1.2]); xlabel('x1'); ylabel('x2'); zlabel('x3');
+%             for kk = 1:size(xB,1); plot3([xB(kk,1);xM(kk,1)],[xB(kk,2);xM(kk,2)],[xB(kk,3);xM(kk,3)],'k-'); end;
+%             %for kk = 1:size(xM,1); for ll = 1:size(xM,1); if (kk ~= ll); plot3([xM(kk,1);xM(ll,1)],[xM(kk,2);xM(ll,2)],[xM(kk,3);xM(ll,3)],'c:'); end; end; end;
+%             subplot(2,1,2); hold off; plot3(xPS(:,4),xPS(:,5),xPS(:,6),'rx'); hold on; plot3(xB(:,4),xB(:,5),xB(:,6),'bo'); plot3(xM(:,4),xM(:,5),xM(:,6),'k.'); axis([-0.2 1.2 -0.2 1.2 -0.2 1.2]); xlabel('x4'); ylabel('x5'); zlabel('x6');
+%             for kk = 1:size(xB,1); plot3([xB(kk,4);xM(kk,4)],[xB(kk,5);xM(kk,5)],[xB(kk,6);xM(kk,6)],'k-'); end;
+%         end
         
         % Run FDL
         % Peter Eades. A heuristic for graph drawing. Congressus Numerantium, 42:149–160, 1984.
@@ -99,30 +99,30 @@ function xf = sampling_FDL(xP,number,problem)
         vM = vM / 1.1; % Velocity diminishing
         xM = xM + vM*timestep;
         
-        % For debug
-        if (problem.control.verbose == 2)
-            mindist = 1e3*ones(number,1);
-            minapart = 1e3*ones(number,1);
-            for i = 1:number
-                for j = 1:nxP
-                    mindist(i) = min(mindist(i),sqrt(sum((xM(i,:) - xPS(j,:)).^2)));
-                end
-            end
-            for i = 1:number
-                for j = 1:number
-                    if ~(i == j)
-                        minapart(i) = min(minapart(i),sqrt(sum((xM(i,:)-xM(j,:)).^2)));
-                    end
-                end
-            end
-            disp('minapart / mindist');
-            disp([minapart, mindist]);
-            if (iloop == 1)
-                stdminapart = std(minapart);
-                stdmindist = std(mindist);
-            end
-            drawnow;
-        end
+%         % For debug
+%         if (problem.control.verbose == 2)
+%             mindist = 1e3*ones(number,1);
+%             minapart = 1e3*ones(number,1);
+%             for i = 1:number
+%                 for j = 1:nxP
+%                     mindist(i) = min(mindist(i),sqrt(sum((xM(i,:) - xPS(j,:)).^2)));
+%                 end
+%             end
+%             for i = 1:number
+%                 for j = 1:number
+%                     if ~(i == j)
+%                         minapart(i) = min(minapart(i),sqrt(sum((xM(i,:)-xM(j,:)).^2)));
+%                     end
+%                 end
+%             end
+%             disp('minapart / mindist');
+%             disp([minapart, mindist]);
+%             if (iloop == 1)
+%                 stdminapart = std(minapart);
+%                 stdmindist = std(mindist);
+%             end
+%             drawnow;
+%         end
         
         % Stopping
         if max(sqrt(sum(vM.^2,2))) < 1e-2

@@ -75,6 +75,9 @@
 %% Objective function
 function f = obj(x,p)
 
+    % Log scale to linear scale
+    xlinear = [10.^x(1:(end-1)),x(end)];
+
     % Parameters
     m1 = p.m1;                              % 1/4 sprung mass [kg]
     m2 = p.m2;                              % 1/4 unsprung mass [kg]
@@ -90,10 +93,10 @@ function f = obj(x,p)
     dt = [dt, dt(end)];
     
     % Decompose design variables
-    n_m = floor(length(x)/2);               % Number of modes
-    K_m = x(1:n_m);                         % K_m
-    lambda_m = x((n_m + 1):(2*n_m));        % lambda_m
-    k1 = x(end);                            % Suspension stiffness [N/m]
+    n_m = floor(length(xlinear)/2);         % Number of modes
+    K_m = xlinear(1:n_m);                   % K_m
+    lambda_m = xlinear((n_m + 1):(2*n_m));  % lambda_m
+    k1 = xlinear(end);                      % Suspension stiffness [N/m]
     K = zeros(1,size(t,2));                 % Initialize kernel
     for i = 1:n_m                           % Multimode Maxwell model
         K = K  + K_m(i)*exp(-t/lambda_m(i));
@@ -129,15 +132,14 @@ function f = obj(x,p)
         xi(:,i+1) = xi(:,i) + dt(i)/2*(xidot(:,i) + fst);
     end
     
-    
-    
-    
     % Debug purpose
-    close all;
-    plot(t,xi(1,:),'r-'); hold on; plot(t,xi(2,:),'b-');
-    f = 0;
+    %close all;
+    %plot(t,xi(1,:),'r-'); hold on; plot(t,xi(2,:),'b-');
+    %legend('sprung mass','unsprung mass'); hold off;
     
-    
+    % Objective functions
+    f = [   max(xi(1,:)) - min(xi(1,:));                    % Comfort
+            max(xi(2,:) - road_z) - min(xi(2,:) - road_z)]; % Handling
     
     
 end

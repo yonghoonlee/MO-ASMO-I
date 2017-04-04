@@ -51,6 +51,6 @@ function MO = surrogate_gamultiobj(SM,problem,initpop)
     MO.population = pop;
     MO.score = scr;
     if (problem.control.verbose > 0)
-        fprintf('%s','done');
+        fprintf('%s','done\n');
     end
 end

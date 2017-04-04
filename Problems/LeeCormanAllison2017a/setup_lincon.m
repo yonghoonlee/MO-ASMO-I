@@ -27,11 +27,8 @@
 % LICENSE.TXT file in each corresponding subdirectories.
 
 function [A,b,Aeq,beq] = setup_lincon()
-    A = [-1,-1,0,0,0,0;
-        1,1,0,0,0,0;
-        -1,1,0,0,0,0;
-        1,-3,0,0,0,0];
-    b = [-2;6;2;2];
+    A = [];
+    b = [];
     Aeq = [];
     beq = [];
 end
