@@ -25,8 +25,8 @@
 % LICENSE.TXT file in each corresponding subdirectories.
 
 function [xlb,xub,flb,fub] = setup_bounds()
-    xlb = [-1;-1;-1;-1;200];
-    xub = [4;4;2;2;1000];
-    flb = [0.1;0.1];
-    fub = [1;0.25];
+    xlb = [1.3;2.3;-1;-1;2.5];
+    xub = [2.3;3.3;2;2;2.8];
+    flb = [0.0045;0.15];
+    fub = [0.0060;0.18];
 end

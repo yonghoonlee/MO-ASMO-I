@@ -39,14 +39,15 @@ function xf = sampling_exploration(problem,k,varargin)
     lb = problem.xlb;
     ub = problem.xub;
     nonlcon = problem.nonlconfun;
+    p = problem.p;
     opt = problem.sampling.initconopt;
     wei1 = problem.sampling.initconobjw;
     wei2 = problem.sampling.initcondispw;
     
     switch lower(method)
         case 'lhs'
-            ex = 0; % To enter the while loop
-            while (ex < 1)
+            ex = -1; % To enter the while loop
+            while (ex < 0)
                 ex = 2;
                 % Sampling and descaling
                 xt = sampling_LHS(number,dimension);
@@ -59,7 +60,7 @@ function xf = sampling_exploration(problem,k,varargin)
                     xtmp = xt(i,:);
                     [xs,f,e] = fmincon( ...
                         @(x)sampling_cobj(x,xtmp,wei1,wei2,prevPoints),...
-                        xtmp,A,b,Aeq,beq,lb,ub,@(x)nonlcon(x),opt);
+                        xtmp,A,b,Aeq,beq,lb,ub,@(x)nonlcon(x,p),opt);
                     xf(i,:) = reshape(xs,1,numel(xs));
                     if (size(prevPoints,1) ~= 0)
                         prevPoints = [prevPoints; reshape(xs,1,numel(xs))];

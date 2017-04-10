@@ -42,8 +42,13 @@ function xf = sampling_FDL(xP,number,problem)
     if (nothers >= size(xPS,1))
         nothers = size(xPS,1)-1;
     end
-    [~,xtmp,~] = kmeans(xPS,nothers);
+    if ((nothers > 0) && (size(xPS,1) > nothers))
+        [~,xtmp,~] = kmeans(xPS,nothers);
+    else
+        xtmp = xPS;
+    end
     xB = [xB; xtmp];
+    number = size(xB,1);
     
     % Generate nearby points to the xB
     pm = rand(size(xB)); pm(pm<0.5) = -1; pm(pm>=0.5) = 1;

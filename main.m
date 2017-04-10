@@ -54,13 +54,13 @@ plot_preparation;                               % Plot preparation script
 
 % Initialize
 k = 0;
-disp(strcat('[[Iteration:',num2str(k),']]'));
 DATA{k+1,1} = sampling_exploration(problem,k);  % Sampling initial designs
                                                 % (constraints enforced)
 
 while(k<problem.control.maxiter)
     % Iteration begins
     k = k + 1;
+    disp(strcat('[[Iteration:',num2str(k),']]'));
     
     % High fidelity simulation for the first objective computation
     tic;

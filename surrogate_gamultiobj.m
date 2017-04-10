@@ -28,6 +28,7 @@ function MO = surrogate_gamultiobj(SM,problem,initpop)
     ub = problem.xub;
     nxvar = problem.nxvar;
     nonlconfun = problem.nonlconfun;
+    p = problem.p;
     % Modify options
     if size(initpop,1) > 1
         opt.InitialPopulation = initpop;
@@ -38,7 +39,7 @@ function MO = surrogate_gamultiobj(SM,problem,initpop)
     end
     % Run multiobjective optimization using gamultiobj
     [xopt,fopt,ef,out,pop,scr] = gamultiobj(@(x)surrogate_eval(x,SM),...
-        nxvar,A,b,Aeq,beq,lb,ub,@(x)nonlconfun(x),opt);
+        nxvar,A,b,Aeq,beq,lb,ub,@(x)nonlconfun(x,p),opt);
     % Maintain unique solutions only
     xsize = size(xopt,2);
     xcomb = [xopt,fopt];
@@ -51,6 +52,6 @@ function MO = surrogate_gamultiobj(SM,problem,initpop)
     MO.population = pop;
     MO.score = scr;
     if (problem.control.verbose > 0)
-        fprintf('%s','done\n');
+        fprintf('%s\n','done');
     end
 end

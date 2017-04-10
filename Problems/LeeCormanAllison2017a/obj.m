@@ -76,7 +76,7 @@
 function f = obj(x,p)
 
     % Log scale to linear scale
-    xlinear = [10.^x(1:(end-1)),x(end)];
+    xlinear = 10.^x;
 
     % Parameters
     m1 = p.m1;                              % 1/4 sprung mass [kg]
@@ -113,8 +113,17 @@ function f = obj(x,p)
             convint = convint ...
                 + K(j)*(xi(3,(i-j+1)) - xi(4,(i-j+1)))*dt(j);
         end
+        
+%         %%%% TEST
+%         
+%         convint = 500*(xi(3,i) - xi(4,i));
+%         
+%         %%%% END TEST
+        
+        
+        
         xidot(:,i) = [xi(3,i); xi(4,i);
-            (-convint - k1*(xi(1,i) - xi(2,i)))/m1 - g;
+            (-convint - k1*(xi(1,i) - xi(2,i)))/m1;% - g;
             (convint + k1*(xi(1,i) - xi(2,i)) ...
             - k2*(xi(2,i) - road_z(i)))/m2 - g];
         %xi(:,i+1) = xi(:,i) + dt(i)*xidot(:,i);
@@ -126,20 +135,20 @@ function f = obj(x,p)
                 + K(j)*(xitp(3,(i-j+2)) - xitp(4,(i-j+2)))*dt(j);
         end
         fst = [xist(3); xist(4);
-            (-convintst - k1*(xist(1) - xist(2)))/m1 - g;
+            (-convintst - k1*(xist(1) - xist(2)))/m1;% - g;
             (convintst + k1*(xist(1) - xist(2)) ...
             - k2*(xist(2) - road_z(i+1)))/m2 - g];
         xi(:,i+1) = xi(:,i) + dt(i)/2*(xidot(:,i) + fst);
     end
     
     % Debug purpose
-    %close all;
-    %plot(t,xi(1,:),'r-'); hold on; plot(t,xi(2,:),'b-');
-    %legend('sprung mass','unsprung mass'); hold off;
+    simplot = figure();
+    plot(t,road_z,'k-'); hold on; plot(t,xi(1,:),'r-'); plot(t,xi(2,:),'b-');
+    legend('road','sprung mass','unsprung mass'); hold off;
     
     % Objective functions
-    f = [   max(xi(1,:)) - min(xi(1,:));                    % Comfort
-            max(xi(2,:) - road_z) - min(xi(2,:) - road_z)]; % Handling
+    f = [   max(xi(1,:)) - min(xi(1,:));                        % Comfort
+            max(xi(2,:) - road_z) - min(xi(2,:) - road_z)   ];  % Handling
     
     
 end
