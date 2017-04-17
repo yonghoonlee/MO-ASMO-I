@@ -114,19 +114,10 @@ function f = obj(x,p)
                 + K(j)*(xi(3,(i-j+1)) - xi(4,(i-j+1)))*dt(j);
         end
         
-%         %%%% TEST
-%         
-%         convint = 500*(xi(3,i) - xi(4,i));
-%         
-%         %%%% END TEST
-        
-        
-        
         xidot(:,i) = [xi(3,i); xi(4,i);
             (-convint - k1*(xi(1,i) - xi(2,i)))/m1;% - g;
             (convint + k1*(xi(1,i) - xi(2,i)) ...
             - k2*(xi(2,i) - road_z(i)))/m2 - g];
-        %xi(:,i+1) = xi(:,i) + dt(i)*xidot(:,i);
         xist = xi(:,i) + dt(i)*xidot(:,i); % Predictor step (\xi_{*})
         xitp = [xi(:,1:i), xist];
         convintst = 0;
@@ -141,14 +132,29 @@ function f = obj(x,p)
         xi(:,i+1) = xi(:,i) + dt(i)/2*(xidot(:,i) + fst);
     end
     
-    % Debug purpose
-    simplot = figure();
-    plot(t,road_z,'k-'); hold on; plot(t,xi(1,:),'r-'); plot(t,xi(2,:),'b-');
-    legend('road','sprung mass','unsprung mass'); hold off;
-    
     % Objective functions
     f = [   max(xi(1,:)) - min(xi(1,:));                        % Comfort
             max(xi(2,:) - road_z) - min(xi(2,:) - road_z)   ];  % Handling
     
+	% For single-objective optimization problems
+    if isfield(p,'single')
+        if p.single == 1
+            f = f(1);
+        elseif p.single == 2
+            f = f(2);
+        end
+    end
+    
+    % Debug purpose
+    if isfield(p,'debug')
+        if p.debug == true
+            try close(smplot); catch; end;
+            smplot = figure('Color',[1 1 1]);
+            plot(t,road_z,'k-'); hold on;
+            plot(t,xi(1,:),'r-');
+            plot(t,xi(2,:),'b-');
+            legend('road','sprung mass','unsprung mass'); hold off;
+        end
+    end
     
 end

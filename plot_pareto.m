@@ -61,7 +61,7 @@ set(gca,'FontSize',16);
 set(gca,'TickLabelInterpreter','latex');
 xlabel('$f_1$'); ylabel('$f_2$');
 legend([p1],{'predicted Pareto set'},...
-    'Location','northeast','Interpreter','latex','FontSize',16);
+    'Location','southwest','Interpreter','latex','FontSize',16);
 %legend('boxoff');
 if (problem.control.plotexport ~= 0)
     eval(['export_fig ',fullfile(problem.probpath,...
@@ -99,7 +99,7 @@ if (problem.highfidelity.expensive == 0)        % If fn eval is not costly
     set(gca,'TickLabelInterpreter','latex');
     xlabel('$f_1$'); ylabel('$f_2$');
     legend([p3,p2],{'predicted Pareto set','high-fidelity function'},...
-        'Location','northeast','Interpreter','latex','FontSize',16);
+        'Location','southwest','Interpreter','latex','FontSize',16);
     %legend('boxoff');
     if (problem.control.plotexport ~= 0)
         eval(['export_fig ',fullfile(problem.probpath,...

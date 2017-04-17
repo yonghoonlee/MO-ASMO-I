@@ -32,22 +32,31 @@ problem.flb = flb;
 problem.fub = fub;
 problem = settings(problem);        % Problem-specific params
 
-% Full Factorial Design
-N = 4;
-x = (fullfact(N*ones(1,5)) - 1)./(N-1);
-Xlb = repmat(xlb',size(x,1),1);
-Xub = repmat(xub',size(x,1),1);
-X = Xlb + (Xub - Xlb).*x;
-F = zeros(size(X,1),2);
+%% SINGLE-OBJECTIVE OPTIMIZATIONS
 
-% Full Factorial Analysis
+gopt = gaoptimset('ga');
+gopt.PopulationSize = 100;
+gopt.CrossoverFraction = 0.35;
+gopt.Generations = 100;
+gopt.TolFun = 1e-9;
+gopt.TolCon = 1e-6;
+gopt.Display = 'iter';
+gopt.MutationFcn = @mutationadaptfeasible;
+gopt.UseParallel = true;
+
 p = problem.p;
-if (problem.parallel == true)
-    parfor i = 1:size(X,1)
-        F(i,:) = transpose(obj(X(i,:),p));
-    end
-else
-    for i = 1:size(X,1)
-        F(i,:) = transpose(obj(X(i,:),p));
-    end
-end
+p.single = 1;
+[xopt1,fopt1] = ga(@(x)obj(x,p),5,[],[],[],[],xlb,xub,[],gopt);
+
+p.single = 2;
+[xopt2,fopt2] = ga(@(x)obj(x,p),5,[],[],[],[],xlb,xub,[],gopt);
+
+save('test_singleobj.mat');
+
+fprintf('Optimization for Objective-1\n');
+fprintf('xopt: %20.16f \n',xopt1);
+fprintf('fopt: %20.16f \n',fopt1);
+
+fprintf('Optimization for Objective-2\n');
+fprintf('xopt: %20.16f \n',xopt2);
+fprintf('fopt: %20.16f \n',fopt2);
