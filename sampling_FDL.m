@@ -34,7 +34,8 @@ function xf = sampling_FDL(xP,number,problem)
     xC = 0.5*ones(size(xPlb)); % Scaled center should be 0.5
     distC = sqrt(sum((xPS - repmat(xC,nxP,1)).^2,2));
     [~,idistC] = sort(distC,'descend'); % Get index in larger first
-    for i = 1:nbounding
+    nb = min(nbounding,length(distC));
+    for i = 1:nb
         xB = [xB; xPS(idistC(i),:)];
     end
     
