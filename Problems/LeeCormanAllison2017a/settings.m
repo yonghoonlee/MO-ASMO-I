@@ -23,8 +23,62 @@
 
 function problem = settings(problem)
 
-    problem.control.maxiter = 40;
-    problem.sampling.initnumber = 20;
+    % =======================
+    % CASE 1. Mode difference
+    % =======================
+    
+%     % Case 1-1: 1-mode
+%     problem.nmode = 1;
+%     problem.control.maxiter = 30*(2*problem.nmode+1);
+%     problem.sampling.initnumber = 5*(2*problem.nmode+1);
+%     problem.sampling.valnumber = 6 + (2*problem.nmode+1);
+%     problem.sampling.upnumber = (2*problem.nmode+1);
+%     problem.sampling.upexpnumber = (2*problem.nmode+1);
+    
+%     % Case 1-2: 2-mode
+%     problem.nmode = 2;
+%     problem.control.maxiter = 30*(2*problem.nmode+1);
+%     problem.sampling.initnumber = 5*(2*problem.nmode+1);
+%     problem.sampling.valnumber = 6 + (2*problem.nmode+1);
+%     problem.sampling.upnumber = (2*problem.nmode+1);
+%     problem.sampling.upexpnumber = (2*problem.nmode+1);
+    
+%     % Case 1-3: 3-mode
+%     problem.nmode = 3;
+%     problem.control.maxiter = 30*(2*problem.nmode+1);
+%     problem.sampling.initnumber = 5*(2*problem.nmode+1);
+%     problem.sampling.valnumber = 6 + (2*problem.nmode+1);
+%     problem.sampling.upnumber = (2*problem.nmode+1);
+%     problem.sampling.upexpnumber = (2*problem.nmode+1);
+    
+%     % Case 1-4: 4-mode
+%     problem.nmode = 4;
+%     problem.control.maxiter = 30*(2*problem.nmode+1);
+%     problem.sampling.initnumber = 5*(2*problem.nmode+1);
+%     problem.sampling.valnumber = 6 + (2*problem.nmode+1);
+%     problem.sampling.upnumber = (2*problem.nmode+1);
+%     problem.sampling.upexpnumber = (2*problem.nmode+1);
+    
+%     % Case 1-5: 5-mode
+%     problem.nmode = 5;
+%     problem.control.maxiter = 30*(2*problem.nmode+1);
+%     problem.sampling.initnumber = 5*(2*problem.nmode+1);
+%     problem.sampling.valnumber = 6 + (2*problem.nmode+1);
+%     problem.sampling.upnumber = 3*problem.nmode;
+%     problem.sampling.upexpnumber = 3*problem.nmode;
+    
+    % Case 1-6: 6-mode
+    problem.nmode = 6;
+    problem.control.maxiter = 30*(2*problem.nmode+1);
+    problem.sampling.initnumber = 5*(2*problem.nmode+1);
+    problem.sampling.valnumber = 6 + (2*problem.nmode+1);
+    problem.sampling.upnumber = (2*problem.nmode+1);
+    problem.sampling.upexpnumber = (2*problem.nmode+1);
+    
+
+    % =======================
+    % Setting
+    % =======================
     
     problem.highfidelity.expensive = 0;     % Not expensive
     problem.highfidelity.vectorized = 0;    % Function evaluation in scalar
@@ -38,28 +92,9 @@ function problem = settings(problem)
     problem.p.road_x = road_x;              % Road profile in x [m]
     problem.p.road_z = road_z;              % Road profile in z [m]
     
-    problem.plotrange.xmin = 0.0045;
-    problem.plotrange.xmax = 0.006;
-    problem.plotrange.ymin = 0.15;
-    problem.plotrange.ymax = 0.18;
+    problem.plotrange.xmin = 0.004;
+    problem.plotrange.xmax = 0.008;
+    problem.plotrange.ymin = 0.05;
+    problem.plotrange.ymax = 0.20;
     
-    % Approximated anchor point solutions obtained from other method
-    problem.approximated.anchor1_x ...
-        = [ 1.601440240667433068111336069705430418252945e+00,...
-            3.287396192937855676774461244349367916584015e+00,...
-            5.148919924139860881950880866497755050659180e-01,...
-            2.583896432208809823549700013245455920696259e-01,...
-            2.500154854692612005351293191779404878616333e+00 ];
-    problem.approximated.anchor1_f ...
-        = [ 4.591321895652368881290961155627883272245526e-03,...
-            1.749896094060851559071068095363443717360497e-01 ];
-    problem.approximated.anchor2_x ...
-        = [ 2.299994088071814601903497532475739717483521e+00,...
-            3.299996580890698805177407848532311618328094e+00,...
-           -9.999818143393159886045395978726446628570557e-01,...
-           -9.999813468601501664778652411769144237041473e-01,...
-            2.799992852481252292307090101530775427818298e+00 ];
-    problem.approximated.anchor2_f ...
-        = [ 5.768371395759553169058087007670110324397683e-03,...
-            1.575889905018117154167356375182862393558025e-01 ];
 end
