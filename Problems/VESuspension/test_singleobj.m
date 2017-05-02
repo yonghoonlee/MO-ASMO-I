@@ -20,8 +20,8 @@ end
 [xlb,xub,flb,fub] = setup_bounds(); % Setup bounds
 problem.nxvar = length(xlb);        % Number of design variables
 problem.nfvar = length(flb);        % Number of obj function variables
-problem.objfun = objfun;
-problem.nonlconfun = nonlconfun;
+problem.objfun = @obj;
+problem.nonlconfun = @nonlcon;
 problem.A = A;
 problem.b = b;
 problem.Aeq = Aeq;
@@ -46,10 +46,10 @@ gopt.UseParallel = true;
 
 p = problem.p;
 p.single = 1;
-[xopt1,fopt1] = ga(@(x)obj(x,p),5,[],[],[],[],xlb,xub,[],gopt);
+[xopt1,fopt1] = ga(@(x)obj(x,p),13,[],[],[],[],xlb,xub,@(x)nonlcon(x,p),gopt);
 
 p.single = 2;
-[xopt2,fopt2] = ga(@(x)obj(x,p),5,[],[],[],[],xlb,xub,[],gopt);
+[xopt2,fopt2] = ga(@(x)obj(x,p),13,[],[],[],[],xlb,xub,@(x)nonlcon(x,p),gopt);
 
 save('test_singleobj.mat');
 

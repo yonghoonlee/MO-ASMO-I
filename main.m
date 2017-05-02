@@ -12,10 +12,10 @@
 clear; clc; close all; restoredefaultpath;
 
 % Problem path is determined as "./Problems/{problem.name}"
-problem.name = 'LeeCormanAllison2017a';
+problem.name = 'VESuspension';
                         % Options:  problem.name = 'OsyczkaKundu';
                         %           problem.name = 'Lee2017a';
-                        %           problem.name = 'LeeCormanAllison2017a';
+                        %           problem.name = 'VESuspension';
                         %           or user-defined problems can be solved.
 % Process problem structure
 problem = setup_problem(problem);               % Load problem definition

@@ -80,7 +80,7 @@ function problem = settings(problem)
     % Setting
     % =======================
     
-    problem.highfidelity.expensive = 0;     % Not expensive
+    problem.highfidelity.expensive = 1;     % Not expensive
     problem.highfidelity.vectorized = 0;    % Function evaluation in scalar
     problem.p.m1 = 325;                     % 1/4 sprung mass [kg]
     problem.p.m2 = 65;                      % 1/4 unsprung mass [kg]
@@ -92,9 +92,9 @@ function problem = settings(problem)
     problem.p.road_x = road_x;              % Road profile in x [m]
     problem.p.road_z = road_z;              % Road profile in z [m]
     
-    problem.plotrange.xmin = 0.004;
-    problem.plotrange.xmax = 0.008;
-    problem.plotrange.ymin = 0.05;
+    problem.plotrange.xmin = 0.0;
+    problem.plotrange.xmax = 2.0;
+    problem.plotrange.ymin = 0.08;
     problem.plotrange.ymax = 0.20;
     
 end

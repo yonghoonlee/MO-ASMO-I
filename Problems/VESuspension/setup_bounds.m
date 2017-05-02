@@ -28,6 +28,6 @@ function [xlb,xub,flb,fub] = setup_bounds()
     nmode = 6;
     xlb = [1.3*ones(nmode,1); -1*ones(nmode,1); 2.5];
     xub = [3.3*ones(nmode,1); 2*ones(nmode,1); 2.8];
-    flb = [0.0045;0.15];
-    fub = [0.0060;0.18];
+    flb = [0.0;0.08];
+    fub = [2.0;0.20];
 end

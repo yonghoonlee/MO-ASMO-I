@@ -133,7 +133,7 @@ function f = obj(x,p)
     end
     
     % Objective functions
-    f = [   max(xi(1,:)) - min(xi(1,:));                        % Comfort
+    f = [   max(abs(xidot(3,:)));                               % Comfort
             max(xi(2,:) - road_z) - min(xi(2,:) - road_z)   ];  % Handling
     
 	% For single-objective optimization problems
