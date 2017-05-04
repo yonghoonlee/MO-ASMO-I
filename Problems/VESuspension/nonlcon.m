@@ -26,4 +26,26 @@
 function [c,ceq] = nonlcon(x,p)
     c = [];
     ceq = [];
+
+    if (size(x,1) == 1)
+        if (size(x,2) > 1)
+            xin = x;
+        else
+        	error('Number of design variable does not match');
+        end
+    else
+        if (size(x,2) == 1)
+            xin = x';
+        else
+            xin = x;
+        end
+    end
+
+    nmode = floor(size(x,2)/2);
+    xub = repmat(p.xub',size(xin,1),1);
+
+    K = 10.^xin(:,1:nmode);
+    K = sum(K,2);
+    c = [c; K - 10.^xub(:,1)];
+
 end

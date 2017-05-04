@@ -87,14 +87,16 @@ function problem = settings(problem)
     problem.p.k2 = 232500;                  % Tire stiffness [N/m]
     problem.p.g = 9.806;                    % Gravitational acc [m/s^2]
     problem.p.v = 60*1600/3600;             % Vehicle velocity=60mph [m/s]
+    problem.p.xlb = problem.xlb;
+    problem.p.xub = problem.xub;
     
     load(fullfile(problem.probpath,'IRI_737b.mat'));
     problem.p.road_x = road_x;              % Road profile in x [m]
     problem.p.road_z = road_z;              % Road profile in z [m]
     
-    problem.plotrange.xmin = 0.0;
-    problem.plotrange.xmax = 2.0;
-    problem.plotrange.ymin = 0.08;
+    problem.plotrange.xmin = 0.1;
+    problem.plotrange.xmax = 0.7;
+    problem.plotrange.ymin = 0.15;
     problem.plotrange.ymax = 0.20;
     
 end

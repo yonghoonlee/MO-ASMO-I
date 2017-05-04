@@ -54,7 +54,8 @@ function SM = surrogate_construct(x,f,problem)
                             error(strcat(basisfn,'::not supported.'));
                     end
                 end
-                w(:,i) = pinv(phi)*f(:,i);
+                % w(:,i) = pinv(phi)*f(:,i);
+                w(:,i) = phi\f(:,i);
             end
             SM = [];                        % Clear structure
             SM.w = w;                       % Save weights
