@@ -79,4 +79,28 @@ function xf = sampling_exploration(problem,k,varargin)
     if (problem.control.verbose > 0)
         fprintf('%s\n','done');
     end
+    
+%     %==
+%     % For Simionescu Problem Only
+%     fgtest = figure('Color',[1 1 1]);
+%     angle = linspace(0,2*pi,361);
+%     for iangle = 1:length(angle)-1
+%         tangle1 = angle(iangle);
+%         rangle1 = (1 + 0.2*cos(8*atan(cot(tangle1))));
+%         tangle2 = angle(iangle+1);
+%         rangle2 = (1 + 0.2*cos(8*atan(cot(tangle2))));
+%         plot([rangle1*cos(tangle1);rangle2*cos(tangle2)],...
+%              [rangle1*sin(tangle1);rangle2*sin(tangle2)],'r-');
+%         hold on;
+%     end
+%     axis 'square';
+%     plot(xt(:,1),xt(:,2),'bo');
+%     plot(xf(:,1),xf(:,2),'kx');
+%     axis([problem.xlb(1),problem.xub(1),problem.xlb(2),problem.xub(2)]);
+%     if (problem.control.plotexport ~= 0)
+%         eval(['export_fig ',fullfile(problem.probpath,...
+%             ['fig_smpexplore_',num2str(k),'.pdf']), ' -pdf']);
+%     end
+%     close(fgtest);
+%     %==
 end

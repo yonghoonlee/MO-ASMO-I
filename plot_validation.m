@@ -33,7 +33,7 @@ for i = 1:size(DATA{k,10},1)
 end
 clear tmpdat1;
 clear tmpdat2;
-legend([p7,p6],{'predicted result','high-fidelity fn result'},...
+legend([p7(1),p6(1)],{'predicted result','high-fidelity fn result'},...
     'Location','north','Interpreter','latex','FontSize',16);
 %legend('boxoff');
 if (problem.control.plotexport ~= 0)
