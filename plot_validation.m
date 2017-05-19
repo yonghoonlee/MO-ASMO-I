@@ -17,6 +17,7 @@ for i = 1:size(DATA{k,9},1)
     p5 = plot(1:(problem.nxvar),tmpdat,'k:','LineWidth',2);
     hold on;
 end
+axis([1,length(problem.xlb),0,1]);
 clear tmpdat;
 legend([p5],{'validation point'},...
     'Location','north','Interpreter','latex','FontSize',16);
@@ -45,12 +46,12 @@ end
 figure(fg1);
 for i = 1:size(DATA{k,10}(:,1),1)
     p8 = plot([DATA{k,10}(i,1),DATA{k,11}(i,1)],...
-        [DATA{k,10}(i,2),DATA{k,11}(i,2)],'r:','LineWidth',1.5); hold on;
+        [DATA{k,10}(i,2),DATA{k,11}(i,2)],'k:','LineWidth',1.5); hold on;
 end
 p9 = plot(DATA{k,10}(:,1),DATA{k,10}(:,2),'+',...
-    'MarkerEdgeColor',[1 0 0],'MarkerSize',10,'LineWidth',2); hold on;
+    'MarkerEdgeColor',[0 0 0],'MarkerSize',10,'LineWidth',2); hold on;
 p10 = plot(DATA{k,11}(:,1),DATA{k,11}(:,2),'s',...
-    'MarkerEdgeColor',[1 0 0],'MarkerSize',10,'LineWidth',2); hold on;
+    'MarkerEdgeColor',[0 0 0],'MarkerSize',10,'LineWidth',2); hold on;
 if (isfield(problem,'plotrange'))
     if (isfield(problem.plotrange,'xmin') ...
             && isfield(problem.plotrange,'xmax') ...
@@ -84,13 +85,13 @@ if (problem.highfidelity.expensive == 0)        % If fn eval is not costly
     figure(fg2);
     for i = 1:size(DATA{k,10}(:,1),1)
         p11 = plot([DATA{k,10}(i,1),DATA{k,11}(i,1)],...
-            [DATA{k,10}(i,2),DATA{k,11}(i,2)],'r:','LineWidth',1.5);
+            [DATA{k,10}(i,2),DATA{k,11}(i,2)],'k:','LineWidth',1.5);
         hold on;
     end
     p12 = plot(DATA{k,10}(:,1),DATA{k,10}(:,2),'+',...
-        'MarkerEdgeColor',[1 0 0],'MarkerSize',10,'LineWidth',2); hold on;
+        'MarkerEdgeColor',[0 0 0],'MarkerSize',10,'LineWidth',2); hold on;
     p13 = plot(DATA{k,11}(:,1),DATA{k,11}(:,2),'s',...
-        'MarkerEdgeColor',[1 0 0],'MarkerSize',10,'LineWidth',2); hold on;
+        'MarkerEdgeColor',[0 0 0],'MarkerSize',10,'LineWidth',2); hold on;
     if (isfield(problem,'plotrange'))
         if (isfield(problem.plotrange,'xmin') ...
                 && isfield(problem.plotrange,'xmax') ...

@@ -10,7 +10,8 @@
 
 % Pareto set plot in design space
 figure(fg0); clf;
-cmap = hcparula(size(DATA{k,5},1));
+%cmap = hcparula(size(DATA{k,5},1));
+cmap = viridis(size(DATA{k,5},1));
 subplot(2,1,1);
 for i = 1:size(DATA{k,5},1)
     tmpdat = DATA{k,5}(i,:);
@@ -19,6 +20,7 @@ for i = 1:size(DATA{k,5},1)
     hold on;
 end
 clear tmpdat;
+axis([1,length(problem.xlb),0,1]);
 xlabel('design variable');
 ylabel('normalized value');
 set(gca,'XTick',1:problem.nxvar);
@@ -44,8 +46,12 @@ end
 
 % Pareto set plot in objective function space
 figure(fg1); clf;
-p1 = plot(DATA{k,6}(:,1),DATA{k,6}(:,2),'x',...
-    'MarkerEdgeColor',[0 0 0]); hold on;
+p1 = plot(DATA{k,6}(1,1),DATA{k,6}(1,2),'x',...
+    'MarkerEdgeColor',cmap(1,:)); hold on;
+for i = 2:size(DATA{k,6},1)
+    plot(DATA{k,6}(i,1),DATA{k,6}(i,2),'x',...
+        'MarkerEdgeColor',cmap(i,:)); hold on;
+end
 if (isfield(problem,'plotrange'))
     if (isfield(problem.plotrange,'xmin') ...
             && isfield(problem.plotrange,'xmax') ...
@@ -74,8 +80,12 @@ if (problem.highfidelity.expensive == 0)        % If fn eval is not costly
     p2 = plot(DATA{k,7}(:,1),DATA{k,7}(:,2),'o',...
         'MarkerEdgeColor',[0.5 0.5 0.5],'MarkerSize',6,'LineWidth',1.5);
     hold on;
-    p3 = plot(DATA{k,6}(:,1),DATA{k,6}(:,2),'x',...
-        'MarkerEdgeColor',[0 0 0]);
+    p3 = plot(DATA{k,6}(1,1),DATA{k,6}(1,2),'x',...
+        'MarkerEdgeColor',cmap(1,:));
+    for i = 2:size(DATA{k,6},1)
+        plot(DATA{k,6}(i,1),DATA{k,6}(i,2),'x',...
+            'MarkerEdgeColor',cmap(i,:)); hold on;
+    end
     for i = 1:size(DATA{k,6},1)
         p4 = plot([DATA{k,6}(i,1);DATA{k,7}(i,1)],...
             [DATA{k,6}(i,2);DATA{k,7}(i,2)],':','Color',[0.5 0.5 0.5]);

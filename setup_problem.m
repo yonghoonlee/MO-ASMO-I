@@ -28,7 +28,8 @@ function problem = setup_problem(problem)
     
     % List of toolbox paths
     problem.toolpathlist = string({...
-        fullfile('Library','hcparula');
+        %fullfile('Library','hcparula');
+        fullfile('Library','colormaps');
         fullfile('Library','export_fig') ...
     });
     

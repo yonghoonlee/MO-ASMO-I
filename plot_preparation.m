@@ -18,6 +18,12 @@ if (problem.control.plot ~= 0)
         fg2 = figure('Color',[1 1 1]);          % fg2 with white background
         set(fg2,'Position',[1210 100 560 420]);  % set position of fg2
     end
+    if isfield(problem,'plotcustom')
+        for i = 1:length(problem.plotcustom)
+            fgcustom{i} = figure('Color',[1 1 1]);
+            set(fgcustom{i},'Position',[(1000+40*i) (520-40*i) 560 420]);
+        end
+    end
     set(0, 'defaultTextInterpreter', 'latex');  % Text interpreter: LaTeX
     set(0, 'defaultLegendInterpreter', 'latex');% Legend interpreter: LaTeX
 end

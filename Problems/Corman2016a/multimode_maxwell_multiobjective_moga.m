@@ -69,7 +69,7 @@ m2 = max(fopt(:,3));
 cgray = 1 - (fopt(:,3)-m1)/(m2-m1);
 crgb = zeros(length(fopt(:,1)),3);
 for i = 1:length(fopt(:,1))
-    crgb(i,:) = interp1(linspace(0,1,64)',hcparula(64),cgray(i));
+    crgb(i,:) = interp1(linspace(0,1,64)',viridis(64),cgray(i));
 end
 
 %=============================

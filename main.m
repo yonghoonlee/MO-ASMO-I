@@ -12,10 +12,11 @@
 clear; clc; close all; restoredefaultpath;
 
 % Problem path is determined as "./Problems/{problem.name}"
-problem.name = 'VESuspension';
+problem.name = 'VESuspensionVarFreq';
                         % Options:  problem.name = 'OsyczkaKundu';
                         %           problem.name = 'Lee2017a';
                         %           problem.name = 'VESuspension';
+                        %           problem.name = 'VESuspensionVarFreq';
                         %           or user-defined problems can be solved.
 % Process problem structure
 problem = setup_problem(problem);               % Load problem definition
@@ -141,6 +142,17 @@ while(k<problem.control.maxiter)
     % Generate figures of validation sample points
     if (problem.control.plot ~= 0)
         plot_validation;
+        if isfield(problem,'plotcustom')
+            for iplotcustom = 1:length(problem.plotcustom)
+                figure(fgcustom{iplotcustom}); clf;
+                run(fullfile(problem.probpath,problem.plotcustom{iplotcustom}));
+                if (problem.control.plotexport ~= 0)
+                    eval(['export_fig ',fullfile(problem.probpath,...
+                        ['fig_custom',num2str(iplotcustom),'_',num2str(k),'.pdf']),...
+                        ' -pdf']);
+                end
+            end
+        end
     end
     
     % Update sampling

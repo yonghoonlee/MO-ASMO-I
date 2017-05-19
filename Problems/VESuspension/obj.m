@@ -42,11 +42,11 @@
 %
 % $$ m_1 \ddot{x}_1 + \int_{0}^{t} K\left(s\right) \left[\dot{x}_1 \left(t
 % - s\right) - \dot{x}_2 \left(t - s\right) \right] ds + k_1 \left(x_1 -
-% x_2\right) + m_1 g = 0 $$
+% x_2\right) = 0 $$
 %
 % $$ m_2 \ddot{x}_2 - \int_{0}^{t} K\left(s\right) \left[\dot{x}_1 \left(t
 % - s\right) - \dot{x}_2 \left(t - s\right) \right] ds - k_1 \left(x_1 -
-% x_2\right) + k_2 \left(x_2 - z\right) + m_2 g = 0 $$
+% x_2\right) + k_2 \left(x_2 - z\right) = 0 $$
 %
 % $$ K \left(t\right) 
 % = \sum_{m=1}^{M} K_{m} \exp\left(-t / \lambda_{m}\right) $$
@@ -62,12 +62,12 @@
 % $$ \ddot{x}_1 = \left[
 % -\int_{0}^{t}{ K\left(s\right) \left\{ \dot{x}_1 \left(t - s\right)
 % - \dot{x}_2 \left(t - s\right) \right\} } ds - k_1 \left(x_1 - x_2\right)
-% \right] / m_1 - g $$
+% \right] / m_1 $$
 %
 % $$ \ddot{x}_2 = \left[
 % \int_{0}^{t}{ K\left(s\right) \left\{ \dot{x}_1 \left(t - s\right)
 % - \dot{x}_2 \left(t - s\right) \right\} } ds + k_1 \left(x_1 - x_2\right)
-% - k_2 \left(x_2 - z\right) \right] / m_2 - g $$
+% - k_2 \left(x_2 - z\right) \right] / m_2 $$
 %
 % $$ \underline{\xi}^{k+1} = \underline{\xi}^{k} + \Delta t^{k}/2
 % \left(  \right) $$
