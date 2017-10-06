@@ -43,9 +43,18 @@ function f = hff_eval(x,problem)
         if (problem.control.verbose > 0)
             fprintf('%s','parallel...');
         end
-        parfor i = 1:nx
-            result = feval(problem.objfun,x(i,:),problem.p);
-            f(i,:) = reshape(result,1,mf);
+%         parfor i = 1:nx
+%             result = feval(problem.objfun,x(i,:),problem.p);
+%             f(i,:) = reshape(result,1,mf);
+%         end
+        currentpool = gcp();
+        for i = 1:nx
+            fevFuture(i) = parfeval(currentpool,problem.objfun,1,x(i,:),problem.p);
+        end
+        for i = 1:nx
+            [completedIdx,value] = fetchNext(fevFuture);
+            f(completedIdx,:) = reshape(value,1,mf);
+            fprintf('%d,',completedIdx);
         end
     end
     if (problem.control.verbose > 1)

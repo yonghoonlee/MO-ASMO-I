@@ -12,12 +12,14 @@
 clear; clc; close all; restoredefaultpath;
 
 % Problem path is determined as "./Problems/{problem.name}"
-problem.name = 'GiesekusModel';
+problem.name = 'VESuspensionContSpectra';
                         % Options:  problem.name = 'OsyczkaKundu';
                         %           problem.name = 'Lee2017a';
                         %           problem.name = 'VESuspension';
                         %           problem.name = 'VESuspensionVarFreq';
                         %           problem.name = 'GiesekusModel';
+                        %           problem.name = 'Giesekus3Dv03';
+                        %           problem.name = 'VESuspensionContSpectra';
                         %           or user-defined problems can be solved.
 % Process problem structure
 problem = setup_problem(problem);               % Load problem definition
