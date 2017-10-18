@@ -1,0 +1,21 @@
+{
+	"folders":
+	[
+		{
+		"path": ".",
+		"file_exclude_patterns": ["*.png", "*.jpg", "*.gif", "*.psd", "*.lic", "*.License", "LICENSE",
+		"*.txt", "Thumbs.db", "*.asv", "*.html", "*.bak", ".gitignore", ".git", "*.md", "*.m~", ".ignore",
+		"*.log"],
+		},
+	],
+
+
+	"settings":
+	{
+		"open_externally_patterns": [
+		    "*.pdf","*.mat"
+		],
+	},
+
+
+}

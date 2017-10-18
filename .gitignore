@@ -1,0 +1,6 @@
+*.mat
+*.bak
+*.pdf
+*.asv
+external/*
+matlab.sublime-workspace
