@@ -12,8 +12,8 @@ catch
 end
 %-------------------------------------------------------------------------------
 % Prepare and normalize data from all stored high fidelity results
-xplot = [R.data(k,1).c07_PoolXFea; R.data(k,1).c27_valSurXFea];
-fplot = [R.data(k,1).c08_PoolHffFFea; R.data(k,1).c29_valHffFFea];
+xplot = [c07_PoolXFea; c27_valSurXFea];
+fplot = [c08_PoolHffFFea; c29_valHffFFea];
 [nx,mx] = size(xplot);
 [nf,mf] = size(fplot);
 xfplot = sortrows([xplot, fplot], mx+1);
@@ -52,8 +52,8 @@ xlabel('objective function variable', 'FontSize', prob.plotpareto.fontsize);
 ax.FontSize = prob.plotpareto.fontsize;
 %-------------------------------------------------------------------------------
 % Prepare and normalize data from current predicted Pareto set
-xplot = R.data(k,1).c18_parSurXFea;
-fplot = R.data(k,1).c19_parSurFFea;
+xplot = c18_parSurXFea;
+fplot = c19_parSurFFea;
 [nx,mx] = size(xplot);
 [nf,mf] = size(fplot);
 xfplot = sortrows([xplot, fplot], mx+1);
@@ -85,10 +85,10 @@ axis([1, mf, 0, 1]); ax = gca; ax.XTick = linspace(1,mf,mf);
 %-------------------------------------------------------------------------------
 figure(fg1);
 if (prob.control.plotexport)
-    eval(['export_fig ', ...
+    eval(['export_fig ''', ...
         fullfile( ...
             prob.control.plotpath, [ ...
                 prob.control.case, '_fig01_iter', num2str(k,'%04d')] ...
-        ), ' -pdf']);
+        ), ''' -pdf']);
 end
 %===============================================================================

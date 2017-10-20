@@ -7,6 +7,8 @@
 %===============================================================================
 function result = createResultStruct(prob)
     result = struct('x',[],'fval',[],'exitflag',[],'output',[],...
-        'population',[],'scores',[],'data',[],'prob',prob);
+        'population',[],'scores',[],'data',[],'time',[],'prob',prob);
+    result.data = table;
+    result.time = table;
 end
 %===============================================================================

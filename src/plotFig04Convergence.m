@@ -16,12 +16,12 @@ hold off;
 if k>1
     for idx = 2:k
         itr = [(idx-1), idx];
-        errmax = [max(R.data(itr(1),1).c33_valErrorVec), ...
-                  max(R.data(itr(2),1).c33_valErrorVec)];
-        erravg = [R.data(itr(1),1).c34_valErrorAvg, ...
-                  R.data(itr(2),1).c34_valErrorAvg];
-        errmin = [min(R.data(itr(1),1).c33_valErrorVec), ...
-                  min(R.data(itr(2),1).c33_valErrorVec)];
+        errmax = [max(cell2mat(R.data.c33_valErrorVec(itr(1)))), ...
+                  max(cell2mat(R.data.c33_valErrorVec(itr(2))))];
+        erravg = [R.data.c34_valErrorAvg(itr(1)), ...
+                  R.data.c34_valErrorAvg(itr(2))];
+        errmin = [min(cell2mat(R.data.c33_valErrorVec(itr(1)))), ...
+                  min(cell2mat(R.data.c33_valErrorVec(itr(2))))];
         ph1 = semilogy(itr, errmax, '-', 'Color', [0.2 0.2 1], 'LineWidth', 1);
         hold on;
         ph2 = semilogy(itr, erravg, '-', 'Color', [0 0 0], 'LineWidth', 2);
@@ -30,9 +30,9 @@ if k>1
         hold on;
     end
 else
-    errmax = max(R.data(k,1).c33_valErrorVec);
-    erravg = R.data(k,1).c34_valErrorAvg;
-    errmin = min(R.data(k,1).c33_valErrorVec);
+    errmax = max(cell2mat(R.data.c33_valErrorVec(k)));
+    erravg = R.data.c34_valErrorAvg(k);
+    errmin = min(cell2mat(R.data.c33_valErrorVec(k)));
     ph1 = semilogy(k, errmax, '.', 'Color', [0.2 0.2 1], 'LineWidth', 1);
     hold on;
     ph2 = semilogy(k, erravg, '.', 'Color', [0 0 0], 'LineWidth', 2);
@@ -43,7 +43,7 @@ end
 %-------------------------------------------------------------------------------
 ax = gca; ax.FontSize = prob.plotpareto.fontsize;
 xlabel('iteration', 'FontSize', prob.plotpareto.fontsize);
-ylabel('error: $||\bf{x}_{\rm{P}}-\bf{x}_{\rm{hff}}||$', ...
+ylabel('error: $||\bf{f}_{\rm{P}}-\bf{f}_{\rm{hff}}||$', ...
     'FontSize', prob.plotpareto.fontsize);
 legend([ph1, ph2, ph3], ...
     {'largest error', 'average error', 'smallest error'}, ...
@@ -51,10 +51,10 @@ legend([ph1, ph2, ph3], ...
 %-------------------------------------------------------------------------------
 figure(fg4);
 if (prob.control.plotexport)
-    eval(['export_fig ', ...
+    eval(['export_fig ''', ...
         fullfile( ...
             prob.control.plotpath, [ ...
                 prob.control.case, '_fig04_iter', num2str(k,'%04d')] ...
-        ), ' -pdf']);
+        ), ''' -pdf']);
 end
 %===============================================================================

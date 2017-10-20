@@ -17,7 +17,7 @@ figure(fg3);
 hold off;
 for idx = 1:k
     % Prepare data
-    fplot = R.data(idx,1).c19_parSurFFea;
+    fplot = cell2mat(R.data.c19_parSurFFea(idx));
     [nf,mf] = size(fplot);
     fplot = sortrows(fplot, 1);
     %---------------------------------------------------------------------------
@@ -39,10 +39,10 @@ cb.Label.Interpreter = 'latex';
 %-------------------------------------------------------------------------------
 figure(fg3);
 if (prob.control.plotexport)
-    eval(['export_fig ', ...
+    eval(['export_fig ''', ...
         fullfile( ...
             prob.control.plotpath, [ ...
                 prob.control.case, '_fig03_iter', num2str(k,'%04d')] ...
-        ), ' -pdf']);
+        ), ''' -pdf']);
 end
 %===============================================================================

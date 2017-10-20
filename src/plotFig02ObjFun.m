@@ -12,8 +12,8 @@ catch
 end
 %-------------------------------------------------------------------------------
 % Prepare data from current predicted Pareto set
-xplot1 = R.data(k,1).c18_parSurXFea;
-fplot1 = R.data(k,1).c19_parSurFFea;
+xplot1 = c18_parSurXFea;
+fplot1 = c19_parSurFFea;
 [nx1,mx1] = size(xplot1);
 [nf1,mf1] = size(fplot1);
 xfplot1 = sortrows([xplot1, fplot1], mx1+1);
@@ -21,9 +21,9 @@ xplot1 = xfplot1(:,1:mx1);
 fplot1 = xfplot1(:,(mx1+1):end);
 %-------------------------------------------------------------------------------
 % Prepare data from validation sample data set
-xplot2 = R.data(k,1).c27_valSurXFea;
-fplot2 = R.data(k,1).c28_valSurFFea;
-hplot2 = R.data(k,1).c29_valHffFFea;
+xplot2 = c27_valSurXFea;
+fplot2 = c28_valSurFFea;
+hplot2 = c29_valHffFFea;
 [nx2,mx2] = size(xplot2);
 [nf2,mf2] = size(fplot2);
 [nh2,mh2] = size(hplot2);
@@ -35,49 +35,56 @@ hplot2 = xfhplot2(:,(mx2+mf2+1):end);
 % Plot objective function space
 figure(fg2);
 hold off;
-cm = plasma(nx2);
-switch lower(prob.plotpareto.type)
-    case 'pareto2d'
-        ph1 = plot(fplot1(:,1), fplot1(:,2), 'k-', 'MarkerSize', 10, ...
-            'LineWidth', 2); hold on;
-        for idx = 1:nx2
-            plot(fplot2(idx,1), fplot2(idx,2), 'o', 'MarkerSize', 11, ...
-                'LineWidth', 2.5, 'Color', (cm(idx,:) + [0 0 0])/2); hold on;
-            plot(hplot2(idx,1), hplot2(idx,2), 's', 'MarkerSize', 10, ...
-                'Color', cm(idx,:), 'MarkerFaceColor', cm(idx,:)); hold on;
-            plot([fplot2(idx,1) hplot2(idx,1)], ...
-                [fplot2(idx,2) hplot2(idx,2)], ':', ...
-                'LineWidth', 1.5, 'Color', (cm(idx,:) + [0 0 0])/2); hold on;
-        end
-        ph2 = plot(prob.plotpareto.range(3)*2, prob.plotpareto.range(4)*2, ...
-            'o', 'MarkerSize', 11, 'LineWidth', 2.5, ...
-            'Color', [0 0 0]); hold on;
-        ph3 = plot(prob.plotpareto.range(3)*2, prob.plotpareto.range(4)*2, ...
-            's', 'MarkerSize', 10, 'Color', [0 0 0], ...
-            'MarkerFaceColor', [0 0 0]); hold on;
-        axis(prob.plotpareto.range);
-        ax = gca; ax.FontSize = prob.plotpareto.fontsize;
-        xlabel('$f_1$: objective-1', 'FontSize', prob.plotpareto.fontsize);
-        ylabel('$f_2$: objective-2', 'FontSize', prob.plotpareto.fontsize);
-        title(['[iteration ', num2str(k), ']'], ...
-            'FontSize', (prob.plotpareto.fontsize - 2));
-        legend([ph1, ph2, ph3], {'predicted Pareto frontier', ...
-            'validation sample point', 'high fidelity model result'}, ...
-            'Location', 'best');
-        %-----------------------------------------------------------------------
-    case 'pareto3d'
-        %-----------------------------------------------------------------------
-    case 'parallel-line'
-        %-----------------------------------------------------------------------
-    otherwise
-end
-%-------------------------------------------------------------------------------
-figure(fg2);
-if (prob.control.plotexport)
-    eval(['export_fig ', ...
-        fullfile( ...
-            prob.control.plotpath, [ ...
-                prob.control.case, '_fig02_iter', num2str(k,'%04d')] ...
-        ), ' -pdf']);
+if (nx2>0)
+    cm = plasma(nx2);
+    switch lower(prob.plotpareto.type)
+        case 'pareto2d'
+            ph1 = plot(fplot1(:,1), fplot1(:,2), 'k-', 'MarkerSize', 10, ...
+                'LineWidth', 2); hold on;
+            for idx = 1:nx2
+                plot(fplot2(idx,1), fplot2(idx,2), 'o', 'MarkerSize', 11, ...
+                    'LineWidth', 2.5, 'Color', (cm(idx,:) + [0 0 0])/2);
+                hold on;
+                plot(hplot2(idx,1), hplot2(idx,2), 's', 'MarkerSize', 10, ...
+                    'Color', cm(idx,:), 'MarkerFaceColor', cm(idx,:));
+                hold on;
+                plot([fplot2(idx,1) hplot2(idx,1)], ...
+                    [fplot2(idx,2) hplot2(idx,2)], ':', ...
+                    'LineWidth', 1.5, 'Color', (cm(idx,:) + [0 0 0])/2);
+                hold on;
+            end
+            ph2 = plot(prob.plotpareto.range(3)*2, ...
+                prob.plotpareto.range(4)*2, ...
+                'o', 'MarkerSize', 11, 'LineWidth', 2.5, ...
+                'Color', [0 0 0]); hold on;
+            ph3 = plot(prob.plotpareto.range(3)*2, ...
+                prob.plotpareto.range(4)*2, ...
+                's', 'MarkerSize', 10, 'Color', [0 0 0], ...
+                'MarkerFaceColor', [0 0 0]); hold on;
+            axis(prob.plotpareto.range);
+            ax = gca; ax.FontSize = prob.plotpareto.fontsize;
+            xlabel('$f_1$: objective-1', 'FontSize', prob.plotpareto.fontsize);
+            ylabel('$f_2$: objective-2', 'FontSize', prob.plotpareto.fontsize);
+            title(['[iteration ', num2str(k), ']'], ...
+                'FontSize', (prob.plotpareto.fontsize - 2));
+            legend([ph1, ph2, ph3], {'predicted Pareto frontier', ...
+                'validation sample point', 'high fidelity model result'}, ...
+                'Location', 'best');
+            %-------------------------------------------------------------------
+        case 'pareto3d'
+            %-------------------------------------------------------------------
+        case 'parallel-line'
+            %-------------------------------------------------------------------
+        otherwise
+    end
+    %---------------------------------------------------------------------------
+    figure(fg2);
+    if (prob.control.plotexport)
+        eval(['export_fig ''', ...
+            fullfile( ...
+                prob.control.plotpath, [ ...
+                    prob.control.case, '_fig02_iter', num2str(k,'%04d')] ...
+            ), ''' -pdf']);
+    end
 end
 %===============================================================================
