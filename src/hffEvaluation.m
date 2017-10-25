@@ -36,7 +36,7 @@ function f = hffEvaluation(x, prob)
         if (prob.control.verbose > 0)
             fprintf('%s','parallel...');
         end
-        currentpool = gcp();
+        currentpool = gcp('nocreate');
         for i = 1:nx
             fevFuture(i) = parfeval( ...
             	currentpool, prob.function.objfun, 1, x(i,:), prob.param);
