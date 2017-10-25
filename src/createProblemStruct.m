@@ -80,6 +80,7 @@ function prob = defaultProblemStructure()
     prob.bound.xub = [];
     prob.bound.flb = [];
     prob.bound.fub = [];
+    prob.bound.adaptive = true;
     prob.control.case = [];
     prob.control.path = [];
     prob.control.plot = true;           % false, [true]

@@ -68,7 +68,8 @@ function R = runMOASMO(settingsfun, objfun, nonlconfun, casefile)
         %-----------------------------------------------------------------------
         % Surrogate model construction
         tic;
-        c11_surrogate = surrogateConstruct(c07_PoolXFea, c08_PoolHffFFea, prob);
+        c11_surrogate = surrogateConstruct( ...
+            c07_PoolXFea, c08_PoolHffFFea, prob, k);
         R.data.c11_surrogate(k) = {c11_surrogate};
         R.time.c11_11(k) = toc;
         %-----------------------------------------------------------------------
@@ -159,12 +160,14 @@ function R = runMOASMO(settingsfun, objfun, nonlconfun, casefile)
         tic;
         if (k>1); eH = R.data.c33_valErrorVec; else; eH = {1}; end
         [c33_valErrorVec, c34_valErrorAvg] ...
-            = errorEvaluation(c29_valHffFFea, c28_valSurFFea, prob, k, eH);
+            = errorEvaluation(c29_valHffFFea, c28_valSurFFea, ...
+            prob, k, eH, c11_surrogate);
         % If not expensive
         if (~prob.highfidelity.expensive)
             if (k>1); eH = R.data.c35_parErrorVec; else; eH = {1}; end
             [c35_parErrorVec, c36_parErrorAvg] ...
-                = errorEvaluation(c20_parHffFFea, c19_parSurFFea, prob, k, eH);
+                = errorEvaluation(c20_parHffFFea, c19_parSurFFea, ...
+                prob, k, eH, c11_surrogate);
         else
             c35_parErrorVec = 0;
             c36_parErrorAvg = 0;

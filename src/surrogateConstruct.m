@@ -5,12 +5,32 @@
 %===============================================================================
 % Surrogate model construction
 %===============================================================================
-function surrogate = surrogateConstruct(x, f, prob)
+function surrogate = surrogateConstruct(xin, fin, prob, k)
     if (prob.control.verbose > 0)
         fprintf('%s','Constructing surrogate model...');
     end
     %---------------------------------------------------------------------------
     method = prob.surrogate.method;
+    %---------------------------------------------------------------------------
+    nxin = size(xin,1);
+    xlb = prob.bound.xlb;
+    xub = prob.bound.xub;
+    if (prob.bound.adaptive && (k>1) && (nxin>5))
+        flb = min(fin,[],1);
+        fub = max(fin,[],1);
+    else
+        flb = prob.bound.flb;
+        fub = prob.bound.fub;
+    end
+    %---------------------------------------------------------------------------
+    % Scale input
+    x = (xin - repmat(reshape(xlb,1,numel(xlb)),nxin,1)) ...
+        ./(repmat(reshape(xub,1,numel(xub)),nxin,1) ...
+            - repmat(reshape(xlb,1,numel(xlb)),nxin,1));
+    f = (fin - repmat(reshape(flb,1,numel(flb)),nxin,1)) ...
+        ./(repmat(reshape(fub,1,numel(fub)),nxin,1) ...
+            - repmat(reshape(flb,1,numel(flb)),nxin,1));
+    %---------------------------------------------------------------------------
     switch lower(method)
         case 'rbf'                          % Radial-basis function (deprecated)
             basisfn = prob.surrogate.basisfn;
@@ -54,10 +74,19 @@ function surrogate = surrogateConstruct(x, f, prob)
             surrogate.method = method;
             surrogate.basisfn = basisfn;
             surrogate.epsilon = epsilon;
+            surrogate.scale.xlb = xlb;
+            surrogate.scale.xub = xub;
+            surrogate.scale.flb = flb;
+            surrogate.scale.fub = fub;
             %-------------------------------------------------------------------
         case 'rbn'
+            surrogate = [];
             surrogate.method = method;
             surrogate.rbmodel = newrb(x', f');
+            surrogate.scale.xlb = xlb;
+            surrogate.scale.xub = xub;
+            surrogate.scale.flb = flb;
+            surrogate.scale.fub = fub;
             %-------------------------------------------------------------------
         case 'snn'
             hiddenLayerSize = ceil(0.5*prob.nxvar + prob.nfvar);
@@ -68,15 +97,25 @@ function surrogate = surrogateConstruct(x, f, prob)
             net.trainFcn = prob.surrogate.snntrainfnc;
             net.trainParam.max_fail = prob.surrogate.snnmaxfail;
             [tr,~] = train(net,x',f');
+            surrogate = [];
             surrogate.method = method;
             surrogate.nnmodel = tr;
+            surrogate.scale.xlb = xlb;
+            surrogate.scale.xub = xub;
+            surrogate.scale.flb = flb;
+            surrogate.scale.fub = fub;
             %-------------------------------------------------------------------
         case 'gpr'
+            surrogate = [];
             mf = prob.nfvar;
             for k = 1:mf
                 surrogate.gpm{k} = fitrgp(x,f(:,k));
             end
             surrogate.method = method;
+            surrogate.scale.xlb = xlb;
+            surrogate.scale.xub = xub;
+            surrogate.scale.flb = flb;
+            surrogate.scale.fub = fub;
             %-------------------------------------------------------------------
         otherwise
             error(strcat(method,'::not supported.'));

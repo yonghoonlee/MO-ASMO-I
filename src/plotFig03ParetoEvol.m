@@ -24,7 +24,9 @@ for idx = 1:k
     ph{idx} = plot(fplot(:,1), fplot(:,2), '-', 'LineWidth', th(idx), ...
         'Color', cm(idx,:)); hold on;
 end
-axis(prob.plotpareto.range);
+if (numel(prob.plotpareto.range) ~= 0)
+    axis(prob.plotpareto.range);
+end
 ax = gca; ax.FontSize = prob.plotpareto.fontsize;
 xlabel('$f_1$: objective-1', 'FontSize', prob.plotpareto.fontsize);
 ylabel('$f_2$: objective-2', 'FontSize', prob.plotpareto.fontsize);

@@ -5,8 +5,19 @@
 %===============================================================================
 % Evaluate function values on the surrogate model
 %===============================================================================
-function f = surrogateEval(x, surrogate)
+function fout = surrogateEval(xin, surrogate)
     method = surrogate.method;
+    nxin = size(xin,1);
+    xlb = surrogate.scale.xlb;
+    xub = surrogate.scale.xub;
+    flb = surrogate.scale.flb;
+    fub = surrogate.scale.fub;
+    %---------------------------------------------------------------------------
+    % Scale input
+    x = (xin - repmat(reshape(xlb,1,numel(xlb)),nxin,1)) ...
+        ./(repmat(reshape(xub,1,numel(xub)),nxin,1) ...
+            - repmat(reshape(xlb,1,numel(xlb)),nxin,1));
+    %---------------------------------------------------------------------------
     switch lower(method)
         case 'rbf'                          % Radial-basis function (deprecated)
             basisfn = surrogate.basisfn;
@@ -60,5 +71,11 @@ function f = surrogateEval(x, surrogate)
         otherwise
             error(strcat(method,'::not supported.'));
     end
+    %---------------------------------------------------------------------------
+    % Descale
+    nf = size(f,1);
+    fout = repmat(reshape(flb,1,numel(flb)),nf,1) ...
+        + (repmat(reshape(fub,1,numel(fub)),nf,1) ...
+            - repmat(reshape(flb,1,numel(flb)),nf,1)).*f;
 end
 %===============================================================================

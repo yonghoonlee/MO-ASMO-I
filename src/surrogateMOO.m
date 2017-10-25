@@ -34,7 +34,7 @@ function [xopt, fopt, out] = surrogateMOO(surrogate, infeaRegion, initpop, prob)
     % Run multiobjective optimization using gamultiobj
     [xga, fga, exitflag, output, population, score] = gamultiobj( ...
         @(x) surrogateEval(x, surrogate), nxvar, A, b, Aeq, beq, lb, ub, ...
-        @(x) nonlconEval(x, param, nonlconfun, infeaRegion), optGa);
+        @(x) nonlconEval(x, param, nonlconfun, infeaRegion, prob), optGa);
     %---------------------------------------------------------------------------
     % Make solution unique
     xsize = size(xga,2);
@@ -53,8 +53,27 @@ function [xopt, fopt, out] = surrogateMOO(surrogate, infeaRegion, initpop, prob)
         fprintf('%s\n','done');
     end
     %===========================================================================
-    function [c, ceq] = nonlconEval(x, param, nonlconfun, infeaRegion)
-        [c1, ceq] = feval(nonlconfun, x, param);
+    function [c, ceq] = nonlconEval(x, param, nonlconfun, infeaRegion, prob)
+        nx = size(x,1);
+        npool = hffPoolSize();
+        if (npool == 0)
+            if (prob.highfidelity.vectorized == 0)
+                for idx = 1:nx
+                    [c1idx, ceq1idx] = feval(nonlconfun, x(idx,:), param);
+                    c1(idx,:) = reshape(c1idx,1,numel(c1idx));
+                    ceq(idx,:) = reshape(ceq1idx,1,numel(ceq1idx));
+                end
+            else
+                [c1, ceq] = feval(nonlconfun, x, param);
+            end
+        else
+            parfor idx = 1:nx
+                [c1idx, ceq1idx] = feval(nonlconfun, x(idx,:), param);
+                c1(idx,:) = reshape(c1idx,1,numel(c1idx));
+                ceq(idx,:) = reshape(ceq1idx,1,numel(ceq1idx));
+            end
+        end
+        
         c2 = infeaRegionCheck(infeaRegion, x);
         c = [c1, c2];
     end

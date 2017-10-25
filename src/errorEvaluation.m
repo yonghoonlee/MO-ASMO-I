@@ -1,5 +1,6 @@
-function [errorVec, errorAvg] = errorEvaluation(hffFFea, surFFea, prob, k, eH)
-    [nFea, mFea] = size(hffFFea);
+function [errorVec, errorAvg] = errorEvaluation(hffF, surF, prob, k, eH, surr)
+    [nFea, mFea] = size(hffF);
+    
     if (k == 1) && (nFea == 0)
         errorVec = 1;
         errorAvg = 1;
@@ -13,10 +14,17 @@ function [errorVec, errorAvg] = errorEvaluation(hffFFea, surFFea, prob, k, eH)
         errorVec = maxError;
         errorAvg = maxError;
     else
-        flbm = repmat(reshape(prob.bound.flb,1,mFea),nFea,1);
-        fubm = repmat(reshape(prob.bound.fub,1,mFea),nFea,1);
-        normHffFFea = (hffFFea - flbm)./(fubm - flbm);
-        normSurFFea = (surFFea - flbm)./(fubm - flbm);
+        if prob.bound.adaptive
+            flb = surr.scale.flb;
+            fub = surr.scale.fub;
+        else
+            flb = prob.bound.flb;
+            fub = prob.bound.fub;
+        end
+        flbm = repmat(reshape(flb,1,mFea),nFea,1);
+        fubm = repmat(reshape(fub,1,mFea),nFea,1);
+        normHffFFea = (hffF - flbm)./(fubm - flbm);
+        normSurFFea = (surF - flbm)./(fubm - flbm);
         errorVec = sqrt(sum((normHffFFea - normSurFFea).^2,2));
         errorAvg = sum(errorVec)/size(errorVec,1);
     end
