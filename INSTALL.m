@@ -9,6 +9,7 @@
 function INSTALL
 % Installation code adopted by INSTALL_DT_QP_Project function of DT_QP_Project
 % by Daniel R. Herber from https://github.com/danielrherber/dt-qp-project
+% (with modification by Yong Hoon Lee)
 % See the license/INSTALL.License for detail.
     % AddSubmissionContents(mfilename) % add contents to path
     RequiredWebFiles % download required web files
@@ -70,15 +71,15 @@ function RequiredWebZips
     %---------------------------------------------------------------------------
     % Zip 5
 	ind = ind + 1;
-	zips(ind).url = 'https://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/43183/versions/2/download/zip/spyc.zip';
-	zips(ind).folder = 'MFX43183_spyc';
-	zips(ind).test = 'spyc';
+	zips(ind).url = 'https://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/60678/versions/2/download/zip/ypea126-nsga-iii.zip';
+	zips(ind).folder = 'MFX60678_nsga3';
+	zips(ind).test = 'nsga3';
     %---------------------------------------------------------------------------
     % zip 6
 	ind = ind + 1;
-	zips(ind).url = 'https://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/56519/versions/1/download/zip/v1.zip';
-	zips(ind).folder = 'MFX56519_genEllipsePoints';
-	zips(ind).test = 'genEllipsePoints';
+	zips(ind).url = 'https://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/10429/versions/9/download/zip/NSGA-II.zip';
+	zips(ind).folder = 'MFX10429_nsga2';
+	zips(ind).test = 'nsga2';
     %---------------------------------------------------------------------------
     % zip 7
 	ind = ind + 1;

@@ -158,7 +158,21 @@ function prob = defaultProblemStructure()
         opt.PlotFcns = [];
         opt.Display = 'off';
     end
+    optDO = gaoptimset(@gamultiobj);
+    optDO.PopulationSize = min(max(1000,500*prob.nxvar),10000); % [1k,10k]
+    optDO.CrossoverFraction = 0.25;
+    optDO.ParetoFraction = 0.1;
+    optDO.Generations = 200;
+    optDO.StallGenLimit = 20;
+    optDO.TolFun = 5e-5;
+    optDO.TolCon = 5e-5;
+    optDO.Vectorized = 'off';
+    optDO.UseParallel = true;
+    optDO.PlotFcns = [@gaplotpareto];
+    optDO.Display = 'iter';
+    optDO.OutputFcns = [@runDOFnOut];
     prob.gamultiobj.opt = opt;           % Save options generated
+    prob.gamultiobj.optDO = optDO;       % For direct optimization
     prob.gamultiobj.parallel = 0;        % [0:vectorize], 1:parallel
                                          % In most cases, vectorization
                                          % will be faster than parallel
