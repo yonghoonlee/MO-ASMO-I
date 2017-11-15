@@ -5,23 +5,31 @@
 %===============================================================================
 % Quarter car suspension multiobjective optimization problem
 %===============================================================================
-function result = QCsus_LogNormal001
+function result = QCsus_10ModeMaxwell251
     casefile = mfilename('fullpath');
     result = runMOASMO(@settings, @obj, @nonlcon, casefile);
 end
 %===============================================================================
 function prob = settings(prob)
     prob.random.seed = 1;
-	% x = [log10(Hmax); log10(taumax); sigma; Ge; k1]
-	prob.bound.xlb = [0; -5; 1e-5;    0; 300];
-    prob.bound.xub = [6;  2;    5; 1000; 700];
+	% x = [Ge; k1; lambda_m; G_m]
+	prob.bound.xlb = [   0; 300; -5; -5; -5; -5; -5; -5; -5; -5; -5; -5; 0; 0; 0; 0; 0; 0; 0; 0; 0; 0];
+    prob.bound.xub = [1000; 700;  2;  2;  2;  2;  2;  2;  2;  2;  2;  2; 6; 6; 6; 6; 6; 6; 6; 6; 6; 6];
     prob.bound.flb = [0; 0];
     prob.bound.fub = [50; 1.5];
     prob.gamultiobj.opt.Generations = 100;
     prob.highfidelity.expensive = true;
     prob.highfidelity.vectorized = false;
-    prob.lincon.A = [];
-    prob.lincon.b = [];
+    prob.lincon.A = [0 0 1 -1  0  0  0  0  0  0  0  0 0 0 0 0 0 0 0 0 0 0;  % lambda(1) <= lambda(2)
+                     0 0 0  1 -1  0  0  0  0  0  0  0 0 0 0 0 0 0 0 0 0 0;  % lambda(2) <= lambda(3)
+                     0 0 0  0  1 -1  0  0  0  0  0  0 0 0 0 0 0 0 0 0 0 0;  % lambda(3) <= lambda(4)
+                     0 0 0  0  0  1 -1  0  0  0  0  0 0 0 0 0 0 0 0 0 0 0;  % lambda(4) <= lambda(5)
+                     0 0 0  0  0  0  1 -1  0  0  0  0 0 0 0 0 0 0 0 0 0 0;  % lambda(5) <= lambda(6)
+                     0 0 0  0  0  0  0  1 -1  0  0  0 0 0 0 0 0 0 0 0 0 0;  % lambda(6) <= lambda(7)
+                     0 0 0  0  0  0  0  0  1 -1  0  0 0 0 0 0 0 0 0 0 0 0;  % lambda(7) <= lambda(8)
+                     0 0 0  0  0  0  0  0  0  1 -1  0 0 0 0 0 0 0 0 0 0 0;  % lambda(8) <= lambda(9)
+                     0 0 0  0  0  0  0  0  0  0  1 -1 0 0 0 0 0 0 0 0 0 0]; % lambda(9) <= lambda(10)
+    prob.lincon.b = [0; 0; 0; 0; 0; 0; 0; 0; 0];
     prob.lincon.Aeq = [];
     prob.lincon.beq = [];
     [mpath,~] = fileparts(mfilename('fullpath'));
@@ -52,38 +60,15 @@ function f = obj(x,p)
     road_z = p.road_z;                      % Road profile in z [m]
     %---------------------------------------------------------------------------
     % Decompose design variables
-    Hmax = 10^x(1);     % Max value of log-normal continuous spectra
-    taumax = 10^x(2);   % Time scale of max in the continuous spectra
-    sigma = x(3);       % Deviation of the continuous spectra
-    Ge = x(4);          % Base value in the relaxation kernel
-    k1 = x(5);          % Suspension stiffness [N/m]
+    %Hmax = 10^x(1);     % Max value of log-normal continuous spectra
+    %taumax = 10^x(2);   % Time scale of max in the continuous spectra
+    %sigma = x(3);       % Deviation of the continuous spectra
+    Ge = x(1);              % Base value in the relaxation kernel
+    k1 = x(2);              % Suspension stiffness [N/m]
+    lambda_m = 10.^x(3:12);  % Maxwell model relaxation time scale parameter
+    K_m = 10.^x(13:22);       % Maxwell model relaxation stress parameter
     %---------------------------------------------------------------------------
     f = [0;0];
-    %---------------------------------------------------------------------------
-    H = @(tau) Hmax*exp(-0.5*(log(tau/taumax)/sigma).^2);
-    Hcutoff = @(tau) log10(H(tau)) + 12; % cutoff at 1e-12
-    %---------------------------------------------------------------------------
-    osol = optimoptions('fsolve');
-    osol.Display = 'off';
-    osol.FiniteDifferenceType = 'central';
-    osol.FunctionTolerance = 1e-3;
-    osol.OptimalityTolerance = 1e-3;
-    osol.StepTolerance = 1e-12;
-    osol.TypicalX = taumax;
-    xlbnd = real(fsolve(Hcutoff,taumax/exp(1)^sigma,osol));
-    xrbnd = real(fsolve(Hcutoff,taumax*exp(1)^sigma,osol));
-    if (xlbnd < 1e-8) && (xrbnd > 1e-8)
-        xlbnd = 1e-8;
-    elseif (xlbnd < 1e-8) && (xrbnd > 1e-10)
-        xlbnd = 1e-16;
-    elseif (xlbnd < 1e-8) && (xrbnd <= 1e-10)
-        xlbnd = 1e-32;
-    end
-    %figure(); fplot(H,[xlbnd,xrbnd]);
-    if (xlbnd >= xrbnd)
-        f = [NaN; NaN];
-        return;
-    end
     %---------------------------------------------------------------------------
     for k = 1:length(vlist)
         v = vlist(k);
@@ -93,16 +78,10 @@ function f = obj(x,p)
         dt = [dt, dt(end)];
         
         K = zeros(1,size(t,2));
-        for i = 1:size(t,2)
-            Kinteg = real( ...
-                integral( ...
-                    @(s) H(exp(s)).*exp(-t(i)./exp(s)),log(xlbnd),log(xrbnd)));
-            if abs(Kinteg) > 1e16
-                f = [NaN; NaN];
-                return;
-            end
-            K(i) = Ge + Kinteg;
+        for j = 1:10
+            K = K + K_m(j)*exp(-t/lambda_m(j));
         end
+        K = K + Ge;
         %-----------------------------------------------------------------------
         % Simulation
         xi = zeros(4,size(t,2));                % Create state
@@ -148,44 +127,6 @@ end
 %===============================================================================
 function [c,ceq] = nonlcon(x,p)
     c = [];
-    ceq = [];
-%     %---------------------------------------------------------------------------
-%     % Decompose design variables
-%     HmaxNLC = 10^x(1);     % Max value of log-normal continuous spectra
-%     taumaxNLC = 10^x(2);   % Time scale of max in the continuous spectra
-%     sigmaNLC = x(3);       % Deviation of the continuous spectra
-%     GeNLC = x(4);          % Base value in the relaxation kernel
-%     %k1NLC = x(5);          % Suspension stiffness [N/m]
-%     %---------------------------------------------------------------------------
-%     HNLC = @(tau) HmaxNLC*exp(-0.5*(log(tau/taumaxNLC)/sigmaNLC).^2);
-%     HcutoffNLC = @(tau) log10(HNLC(tau)) + 12; % cutoff at 1e-12
-%     %---------------------------------------------------------------------------
-%     osolNLC = optimoptions('fsolve');
-%     osolNLC.Display = 'off';
-%     osolNLC.FiniteDifferenceType = 'central';
-%     osolNLC.FunctionTolerance = 1e-3;
-%     osolNLC.OptimalityTolerance = 1e-3;
-%     osolNLC.StepTolerance = 1e-12;
-%     osolNLC.TypicalX = taumaxNLC;
-%     xlbndNLC = real(fsolve(HcutoffNLC,taumaxNLC/exp(1)^sigmaNLC,osolNLC));
-%     xrbndNLC = real(fsolve(HcutoffNLC,taumaxNLC*exp(1)^sigmaNLC,osolNLC));
-%     if (xlbndNLC < 1e-8) && (xrbndNLC > 1e-8)
-%         xlbndNLC = 1e-8;
-%     elseif (xlbndNLC < 1e-8) && (xrbndNLC > 1e-10)
-%         xlbndNLC = 1e-16;
-%     elseif (xlbndNLC < 1e-8) && (xrbndNLC <= 1e-10)
-%         xlbndNLC = 1e-32;
-%     end
-%     %figure(); fplot(H,[xlbnd,xrbnd]);
-%     if (xlbndNLC >= xrbndNLC)
-%         c = [NaN];
-%         return;
-%     end
-%     %---------------------------------------------------------------------------
-%     Kmax = GeNLC + real(integral(@(s) HNLC(exp(s)),log(xlbndNLC),log(xrbndNLC)));
-%     if abs(Kmax) > 1e16
-%     	c = [Kmax/1e16];
-%     end
-%     c = Kmax - p.xub(end);
+    ceq = [];    
 end
 %===============================================================================

@@ -1,0 +1,7 @@
+QCsus_LogNormal[1-9]*
+QCsus_1ModeMaxwell[1-9]*
+QCsus_2ModeMaxwell[1-9]*
+QCsus_3ModeMaxwell[1-9]*
+QCsus_4ModeMaxwell[1-9]*
+QCsus_README.txt
+plot_comparison/*

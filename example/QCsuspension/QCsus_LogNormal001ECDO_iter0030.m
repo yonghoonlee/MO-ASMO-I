@@ -5,9 +5,9 @@
 %===============================================================================
 % Quarter car suspension multiobjective optimization problem
 %===============================================================================
-function result = QCsus_LogNormal001
+function result = QCsus_LogNormal001ECDO_iter0030
     casefile = mfilename('fullpath');
-    result = runMOASMO(@settings, @obj, @nonlcon, casefile);
+    result = runECDO(@settings, @obj, @nonlcon, casefile,'QCsus_LogNormal001_iter0030');
 end
 %===============================================================================
 function prob = settings(prob)
@@ -15,8 +15,8 @@ function prob = settings(prob)
 	% x = [log10(Hmax); log10(taumax); sigma; Ge; k1]
 	prob.bound.xlb = [0; -5; 1e-5;    0; 300];
     prob.bound.xub = [6;  2;    5; 1000; 700];
-    prob.bound.flb = [0; 0];
-    prob.bound.fub = [50; 1.5];
+    prob.bound.flb = [0; 1.1];
+    prob.bound.fub = [4; 1.5];
     prob.gamultiobj.opt.Generations = 100;
     prob.highfidelity.expensive = true;
     prob.highfidelity.vectorized = false;
@@ -32,7 +32,7 @@ function prob = settings(prob)
         'road_x', road_x, 'road_z', road_z);
     prob.plotpareto.type = 'pareto2d';
     prob.plotpareto.range = [];
-    prob.control.maxiter = 30;     % maximum number of iterations
+    prob.control.maxiter = 20;     % maximum number of iterations
     prob.control.maxerror = 1e-4;   % maximum allowable error
     prob.sampling.initnumber = 20;  % initial
     prob.sampling.valnumber = 10;    % validation
@@ -149,43 +149,43 @@ end
 function [c,ceq] = nonlcon(x,p)
     c = [];
     ceq = [];
-%     %---------------------------------------------------------------------------
-%     % Decompose design variables
-%     HmaxNLC = 10^x(1);     % Max value of log-normal continuous spectra
-%     taumaxNLC = 10^x(2);   % Time scale of max in the continuous spectra
-%     sigmaNLC = x(3);       % Deviation of the continuous spectra
-%     GeNLC = x(4);          % Base value in the relaxation kernel
-%     %k1NLC = x(5);          % Suspension stiffness [N/m]
-%     %---------------------------------------------------------------------------
-%     HNLC = @(tau) HmaxNLC*exp(-0.5*(log(tau/taumaxNLC)/sigmaNLC).^2);
-%     HcutoffNLC = @(tau) log10(HNLC(tau)) + 12; % cutoff at 1e-12
-%     %---------------------------------------------------------------------------
-%     osolNLC = optimoptions('fsolve');
-%     osolNLC.Display = 'off';
-%     osolNLC.FiniteDifferenceType = 'central';
-%     osolNLC.FunctionTolerance = 1e-3;
-%     osolNLC.OptimalityTolerance = 1e-3;
-%     osolNLC.StepTolerance = 1e-12;
-%     osolNLC.TypicalX = taumaxNLC;
-%     xlbndNLC = real(fsolve(HcutoffNLC,taumaxNLC/exp(1)^sigmaNLC,osolNLC));
-%     xrbndNLC = real(fsolve(HcutoffNLC,taumaxNLC*exp(1)^sigmaNLC,osolNLC));
-%     if (xlbndNLC < 1e-8) && (xrbndNLC > 1e-8)
-%         xlbndNLC = 1e-8;
-%     elseif (xlbndNLC < 1e-8) && (xrbndNLC > 1e-10)
-%         xlbndNLC = 1e-16;
-%     elseif (xlbndNLC < 1e-8) && (xrbndNLC <= 1e-10)
-%         xlbndNLC = 1e-32;
-%     end
-%     %figure(); fplot(H,[xlbnd,xrbnd]);
-%     if (xlbndNLC >= xrbndNLC)
-%         c = [NaN];
-%         return;
-%     end
-%     %---------------------------------------------------------------------------
-%     Kmax = GeNLC + real(integral(@(s) HNLC(exp(s)),log(xlbndNLC),log(xrbndNLC)));
-%     if abs(Kmax) > 1e16
-%     	c = [Kmax/1e16];
-%     end
-%     c = Kmax - p.xub(end);
+    %---------------------------------------------------------------------------
+    % Decompose design variables
+    HmaxNLC = 10^x(1);     % Max value of log-normal continuous spectra
+    taumaxNLC = 10^x(2);   % Time scale of max in the continuous spectra
+    sigmaNLC = x(3);       % Deviation of the continuous spectra
+    GeNLC = x(4);          % Base value in the relaxation kernel
+    %k1NLC = x(5);          % Suspension stiffness [N/m]
+    %---------------------------------------------------------------------------
+    HNLC = @(tau) HmaxNLC*exp(-0.5*(log(tau/taumaxNLC)/sigmaNLC).^2);
+    HcutoffNLC = @(tau) log10(HNLC(tau)) + 12; % cutoff at 1e-12
+    %---------------------------------------------------------------------------
+    osolNLC = optimoptions('fsolve');
+    osolNLC.Display = 'off';
+    osolNLC.FiniteDifferenceType = 'central';
+    osolNLC.FunctionTolerance = 1e-3;
+    osolNLC.OptimalityTolerance = 1e-3;
+    osolNLC.StepTolerance = 1e-12;
+    osolNLC.TypicalX = taumaxNLC;
+    xlbndNLC = real(fsolve(HcutoffNLC,taumaxNLC/exp(1)^sigmaNLC,osolNLC));
+    xrbndNLC = real(fsolve(HcutoffNLC,taumaxNLC*exp(1)^sigmaNLC,osolNLC));
+    if (xlbndNLC < 1e-8) && (xrbndNLC > 1e-8)
+        xlbndNLC = 1e-8;
+    elseif (xlbndNLC < 1e-8) && (xrbndNLC > 1e-10)
+        xlbndNLC = 1e-16;
+    elseif (xlbndNLC < 1e-8) && (xrbndNLC <= 1e-10)
+        xlbndNLC = 1e-32;
+    end
+    %figure(); fplot(H,[xlbnd,xrbnd]);
+    if (xlbndNLC >= xrbndNLC)
+        c = [NaN];
+        return;
+    end
+    %---------------------------------------------------------------------------
+    Kmax = GeNLC + real(integral(@(s) HNLC(exp(s)),log(xlbndNLC),log(xrbndNLC)));
+    if abs(Kmax) > 1e16
+    	c = [Kmax/1e16];
+    end
+    c = Kmax - p.xub(end);
 end
 %===============================================================================
