@@ -83,6 +83,12 @@ function RequiredWebZips
     %---------------------------------------------------------------------------
     % zip 7
 	ind = ind + 1;
+	zips(ind).url = 'http://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/25962/versions/1/download/zip/lagrange2D.zip';
+	zips(ind).folder = 'MFX25962_lagrange2D';
+	zips(ind).test = 'lagrange2D';
+    %---------------------------------------------------------------------------
+    % zip 8
+	ind = ind + 1;
 	zips(ind).url = 'https://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/8773/versions/38/download/zip/Multiprod_2009.zip';
 	zips(ind).folder = 'MFX8773_multiprod';
 	zips(ind).test = 'multiprod';

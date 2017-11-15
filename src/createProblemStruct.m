@@ -70,6 +70,7 @@ function prob = createProblemStruct(settingsfun,objfun,nonlconfun,casename)
     % check if parallel pool is active
     if (hffPoolSize() > 0)
         prob.highfidelity.parallel = true;
+        prob.sampling.initconopt.UseParallel = true;
     else
         prob.highfidelity.parallel = false;
     end
@@ -114,9 +115,10 @@ function prob = defaultProblemStructure()
     prob.sampling.initmethod = 'LHS';
     prob.sampling.initnumber = 5;
     prob.sampling.initconopt = optimoptions('fmincon', ...
-        'Algorithm','sqp','Display','none','MaxIterations',1000, ...
-        'MaxFunctionEvaluations',1000, ...
-        'TolCon',1e-14,'TolFun',1e-6,'TolX',1e-6);
+        'Algorithm','sqp','Display','iter-detailed','MaxIterations',20, ...
+        'MaxFunctionEvaluations',Inf, ...
+        'ConstraintTolerance',1e-9,'OptimalityTolerance',1e-4,...
+        'StepTolerance',1e-4,'UseParallel',false);
     prob.sampling.initconobjw = 1e-3;    % Weight factor for obj fn
     prob.sampling.initcondispw = 1e-9;   % Weight factor for disperse fn
     prob.sampling.valnumber = 10;

@@ -25,18 +25,8 @@ function infeaRegion = infeaRegionConstruct(infeaX, prob)
     ub = p.C*ones(size(d0));
     Aeq = ones(1,nx);
     beq = 1;
-    npool = hffPoolSize();
-    if npool > 0
-        par = true;
-    else
-        par = false;
-    end
-    opt = optimoptions('fmincon','Algorithm','sqp',...
-        'ConstraintTolerance',1e-9,'Display','iter-detailed',...
-        'FiniteDifferenceType','central','MaxFunctionEvaluations',Inf,...
-        'MaxIterations',Inf,'OptimalityTolerance',1e-9,...
-        'StepTolerance',1e-12,'UseParallel',par);
-    [dopt,~] = fmincon(@(d)obj(d,p),d0,[],[],Aeq,beq,lb,ub,[],opt);
+    [dopt,~] = fmincon(@(d)obj(d,p),d0,[],[],Aeq,beq,lb,ub,[], ...
+        prob.sampling.initconopt);
     %---------------------------------------------------------------------------
     infeaRegion.dopt = dopt;
     infeaRegion.infeaX = infeaX;
