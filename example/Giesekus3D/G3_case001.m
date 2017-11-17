@@ -12,61 +12,112 @@ function result = G3_case001
 end
 %===============================================================================
 function prob = settings(prob)
-    Nr = 5;
-    Nth = 5;
-    Nz = 5;
-    hmin = 269e-6;
-    hmax = 800e-6;
-    eta = 9.624e-3;
-    rho = 873.4;
-    Omega = 10;
-    Ntex = 10;
-    ri = 0.5e-3;
-    ro = 20e-3;
+    Nr      =      5;
+    Nth     =      5;
+    Nz      =      3;
+    hmin    =    269.0e-6;
+    hmax    =    800.0e-6;
+    eta     =      9.624e-3;
+    rho     =    873.4;
+    Omega   =     10.0;
+    Ntex    =     10;
+    ri      =      0.5e-3;
+    ro      =     20.0e-3;
+    tan_angle = sqrt(3); % tan(60deg) = sqrt(3), mesh control point slope
     xlb_geom = hmin*ones(((Nr+1)*Nth),1);
     xub_geom = hmax*ones(((Nr+1)*Nth),1);
-    xlb_fld = [0.001;   % etap1
-               0.0001;  % etap2
-               0.0001;  % lambda1
+    xlb_fld = [0;       % etap1
+               0;       % etap2
+               0.00001; % lambda1
                0.00001; % lambda2
                0.01;    % alpha1
                0.01];   % alpha2
-    xub_fld = [0.1;     % etap1
-               0.01;    % etap2
+    xub_fld = [5/2*eta; % etap1 <= 5/2*eta_s (Explained below)
+               5/2*eta; % etap2 <= 5/2*eta_s
                0.01;    % lambda1
-               0.001;   % lambda2
-               0.99;    % alpha1
-               0.99];   % alpha2
+               0.01;    % lambda2
+               0.5;     % alpha1 <= 0.5 (Based on limits of Giesekus model)
+               0.5];    % alpha2 <= 0.5
+    % limiting upper limit of eta_p_i <= 5/2*eta_s
+    % : This has to do with a limit that we?ve been looking at where we can
+    % relate the polymer viscosity to the concentration of the polymer in
+    % solution. In order to do that, we need the solution to be dilute to
+    % semi-dilute, which limits the concentration, and hence limits the max
+    % value of eta_p.
+    %---------------------------------------------------------------------------
     prob.bound.xlb = [xlb_geom; xlb_fld];
     prob.bound.xub = [xub_geom; xub_fld];
-    prob.bound.flb = [0.0000; -0.12];
-    prob.bound.fub = [0.0005; 0.00];
+    prob.bound.flb = [1e-4; -0.1];
+    prob.bound.fub = [1e-2;  0.0];
+    prob.control.plotexport = false;
+    prob.control.maxiter = 100;     % maximum number of iterations
+    prob.control.maxerror = 1e-8;   % maximum allowable error
     prob.gamultiobj.opt.Generations = 50;
     prob.highfidelity.expensive = true;
     prob.highfidelity.vectorized = false;
-    prob.highfidelity.infeaparam.C = 0.4;
-    prob.highfidelity.infeaparam.q = 0.4;
+    prob.highfidelity.infeaparam.C = 0.5;
+    prob.highfidelity.infeaparam.q = 0.1;
+    prob.plotpareto.type = 'pareto2d';
+    prob.plotpareto.range = [];
+    prob.sampling.initnumber = 36;  % initial
+    prob.sampling.valnumber = 12;    % validation
+    prob.sampling.upnumber = 12;    % exploitation
+    prob.sampling.upexpnumber = 12;  % exploration
+    prob.surrogate.method = 'GPR';  % regression model
+    %---------------------------------------------------------------------------
+    % Linear Constraints
     A1 = []; b1 = [];
-    for idx = 2:(Nth)
+    % Specify lowest point at the outer-most arc.
+    for idx = 2:(Nth) % (Nth-1) rows in sparse constraint vector
         A1 = [A1; idx-1, Nr+1, -1; idx-1, idx*(Nr+1), 1];
         b1 = [b1; 0];
     end
-    prob.lincon.A = full(sparse(A1(:,1),A1(:,2),A1(:,3),Nth-1,length(prob.bound.xlb)));
-    prob.lincon.b = b1;
+    % Specify slope constraints
+    [~,~,~,~,zth,~] = semhat(Nth);
+    [~,~,~,~,zr,~] = semhat(Nr);
+    r = (1+zr)/2*ro+(1-zr)/2*ri;
+    theta = (2*pi/Ntex)/2*zth;
+    [Rmat,Theta] = ndgrid(r,theta);
+    X2d = Rmat.*cos(Theta);
+    Y2d = Rmat.*sin(Theta);
+    cdx = Nth-1;
+    for jdx = 1:(Nth) % 4*(Nth*Nr) rows in sparse constraint vector
+        for idx = 1:(Nr)
+            kdx = (jdx-1)*(Nr+1)+idx;
+            kdxpr = kdx + 1;
+            kdxpth = kdx + (Nr+1);
+            if kdxpth > (Nr+1)*Nth
+                kdxpth = kdxpth - (Nr+1)*Nth;
+            end
+            dr = sqrt((X2d(idx+1,jdx) - X2d(idx,jdx))^2 + (Y2d(idx+1,jdx) - Y2d(idx,jdx))^2);
+            dth = sqrt((X2d(idx,jdx+1) - X2d(idx,jdx))^2 + (Y2d(idx,jdx+1) - Y2d(idx,jdx))^2);
+            cdx = cdx + 1;
+            A1 = [A1; cdx, kdx, -1; cdx, kdxpr, 1];
+            b1 = [b1; tan_angle*dr];
+            cdx = cdx + 1;
+            A1 = [A1; cdx, kdx, 1; cdx, kdxpr, -1];
+            b1 = [b1; tan_angle*dr];
+            cdx = cdx + 1;
+            A1 = [A1; cdx, kdx, -1; cdx, kdxpth, 1];
+            b1 = [b1; tan_angle*dth];
+            cdx = cdx + 1;
+            A1 = [A1; cdx, kdx, 1; cdx, kdxpth, -1];
+            b1 = [b1; tan_angle*dth];
+        end
+    end
+    A1 = [A1; cdx+1, length(xlb_geom)+1, -1; cdx+1, length(xlb_geom)+2, 1];
+    A1 = [A1; cdx+2, length(xlb_geom)+3, -1; cdx+2, length(xlb_geom)+4, 1];
+    A1 = [A1; cdx+3, length(xlb_geom)+5, -1; cdx+3, length(xlb_geom)+6, 1];
+    b1 = [b1; zeros(3,1)];
+    prob.lincon.A = full(sparse(A1(:,1),A1(:,2),A1(:,3),...
+        (Nth-1)+(4*Nth*Nr)+3,length(prob.bound.xlb)));
+    prob.lincon.b = full(sparse(b1));
     prob.lincon.Aeq = [];
     prob.lincon.beq = [];
+    %---------------------------------------------------------------------------
     prob.param = struct('Nr', Nr, 'Nth', Nth, 'Nz', Nz, ...
         'hmin', hmin, 'hmax', hmax, 'eta', eta, 'rho', rho, ...
         'Omega', Omega, 'Ntex', Ntex, 'ri', ri, 'ro', ro);
-    prob.plotpareto.type = 'pareto2d';
-    prob.plotpareto.range = [];
-    prob.control.maxiter = 200;     % maximum number of iterations
-    prob.control.maxerror = 1e-8;   % maximum allowable error
-    prob.sampling.initnumber = 36;  % initial
-    prob.sampling.valnumber = 18;    % validation
-    prob.sampling.upnumber = 12;    % exploitation
-    prob.sampling.upexpnumber = 6;  % exploration
-    prob.surrogate.method = 'GPR';  % regression model
 end
 %===============================================================================
 function f = obj(x,param)
@@ -77,6 +128,7 @@ function f = obj(x,param)
     Ntex = param.Ntex;
     ri = param.ri;
     ro = param.ro;
+    hmin = param.hmin;
     %---------------------------------------------------------------------------
     % Mesh
     Nr = param.Nr;
@@ -743,8 +795,16 @@ function f = obj(x,param)
             end
         end
     end
+    
     % Objective functions
-    f = [M;-Fn];
+    PowerInput = M*Omega; % PowerInput = Torque * Omega
+    %TauStar = (2/(pi*ro^3)*M)/(eta*(Omega*ro)/hmin); % Normalized Apparent Viscosity
+    InertiaEffect = -3/40*pi*ro^2*rho*(ro*Omega)^2; % Inertia effect should be considered for computing normal force generation
+    NormalForce = Fn - InertiaEffect;
+    
+    % Objective functions
+    f = [PowerInput; -NormalForce];
+
 end
 %===============================================================================
 function [c,ceq] = nonlcon(x,param)
@@ -831,7 +891,7 @@ end
 %===============================================================================
 function [dhatDh] = dhat(dhatx)
     dhatn1 = length(dhatx);
-    dhatw  = zeros(dhatn1,2);
+    %dhatw  = zeros(dhatn1,2);
     dhatDh = zeros(dhatn1,dhatn1);
     for dhati=1:dhatn1
         dhatw = fd_weights_full(dhatx(dhati),dhatx,1);  % Bengt Fornberg's interpolation algorithm
