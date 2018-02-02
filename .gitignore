@@ -4,3 +4,4 @@
 *.asv
 external/*
 matlab.sublime-workspace
+Icon*

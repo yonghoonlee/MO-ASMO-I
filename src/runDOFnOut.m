@@ -3,6 +3,8 @@ persistent pophist scrhist
 optchanged = false;
 switch flag
     case 'init'
+        clear pophist;
+        clear scrhist;
         pophist(:,:,1) = state.Population;
         scrhist(:,:,1) = state.Score;
         assignin('base','pophistory',pophist);

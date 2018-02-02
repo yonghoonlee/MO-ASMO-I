@@ -79,7 +79,7 @@ function RequiredWebZips
 	ind = ind + 1;
 	zips(ind).url = 'https://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/10429/versions/9/download/zip/NSGA-II.zip';
 	zips(ind).folder = 'MFX10429_nsga2';
-	zips(ind).test = 'nsga2';
+	zips(ind).test = 'nsga_2';
     %---------------------------------------------------------------------------
     % zip 7
 	ind = ind + 1;

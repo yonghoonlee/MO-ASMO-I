@@ -10,6 +10,15 @@ function [xsort,fsort,ndidx] = ndSort(xin,fin)
 % implemented by Aravind Seshadri in 2009 (with modification by Yong Hoon Lee)
 % from https://www.mathworks.com/matlabcentral/fileexchange/10429
 % See the license/NSGA-II.License for detail.
+    prob.control.verbose = 0;
+    [xin,~,fin,~,~,~] = hffSeparateNaN(xin, fin, prob);
+    if (size(fin,1) == 0)
+        xsort = [];
+        fsort = [];
+        ndidx = [];
+        return;
+    end
+    
     x = xin;
     f = fin;
     [nx,mx] = size(x);

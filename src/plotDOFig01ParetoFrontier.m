@@ -20,6 +20,11 @@ for idx1 = 1:nGen
 end
 %-------------------------------------------------------------------------------
 % Initial population plot
+try
+    size(initScr,1);
+catch
+    initScr = [];
+end
 if (size(initScr,1) ~= 0)
     ph1 = plot(initScr(:,1),initScr(:,2),'o','Color',cm(4,:),...
         'MarkerFaceColor',cm(4,:),'MarkerSize',5); hold on;
@@ -33,9 +38,15 @@ ph3 = plot(fopt(:,1),fopt(:,2),'s','Color',cm(1,:),'MarkerSize',6,...
 ax = gca; ax.FontSize = prob.plotpareto.fontsize;
 xlabel('$f_1$: objective-1', 'FontSize', prob.plotpareto.fontsize);
 ylabel('$f_2$: objective-2', 'FontSize', prob.plotpareto.fontsize);
-legend([ph1, ph2, ph3], {'initial population from MO-ASMO', ...
-    'explored design in direct optimization', 'direct optimization result'}, ...
-    'Location', 'best');
+try
+    legend([ph1, ph2, ph3], {'initial population from MO-ASMO', ...
+        'explored design in direct optimization', 'direct optimization result'}, ...
+        'Location', 'best');
+catch
+    legend([ph2, ph3], {'explored design in direct optimization', ...
+        'direct optimization result'}, ...
+        'Location', 'best');
+end
 %-------------------------------------------------------------------------------
 figure(fg1);
 if (prob.control.plotexport)

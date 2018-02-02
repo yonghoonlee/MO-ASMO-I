@@ -19,9 +19,11 @@ function [sampleFea, sampleInfea, objHFFFea, objHFFInfea, ...
     	addition = sample;
     end
     %---------------------------------------------------------------------------
-    % indices of NaN containing rows (idxInfea) / feasible rows (idxFea)
-    idxInfea = find(any(isnan([sample,objHFF,addition]),2));
-    idxFea = find(~any(isnan([sample,objHFF,addition]),2));
+    % indices of NaN / Inf containing rows (idxInfea) / feasible rows (idxFea)
+    idxInfea = find(any((isnan([sample,objHFF,addition]) ...
+        + isinf([sample,objHFF,addition])),2));
+    idxFea = find(~any((isnan([sample,objHFF,addition]) ...
+        + isinf([sample,objHFF,addition])),2));
     %---------------------------------------------------------------------------
     % results
     sampleFea = sample(idxFea,:);
