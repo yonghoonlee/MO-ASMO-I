@@ -117,6 +117,21 @@ function surrogate = surrogateConstruct(xin, fin, prob, k)
             surrogate.scale.flb = flb;
             surrogate.scale.fub = fub;
             %-------------------------------------------------------------------
+        case 'dace'
+            surrogate = [];
+            mf = prob.nfvar;
+            for k = 1:mf
+                [dmodel, perf] = dacefit(x,f(:,k),...
+                    @regpoly1,@corrspherical,1,0.1,20);
+                surrogate.dacemodel{k} = dmodel;
+                surrogate.daceperf{k} = perf;
+            end
+            surrogate.method = method;
+            surrogate.scale.xlb = xlb;
+            surrogate.scale.xub = xub;
+            surrogate.scale.flb = flb;
+            surrogate.scale.fub = fub;
+            %-------------------------------------------------------------------
         otherwise
             error(strcat(method,'::not supported.'));
     end

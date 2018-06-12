@@ -1,0 +1,9 @@
+FILE QUARANTINED
+
+CITES blocked an attachment that was sent with this email.
+
+The file's name was "winmail.dat->Eric.zip->dace.zip->data1.mat"
+
+CITES automatically blocks certain attachment types in order to protect the security of our email users. These are attachment types that are frequently used to send malware and viruses. 
+
+More information about email filters can be found on the CITES Security web site.

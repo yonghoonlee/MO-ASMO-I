@@ -5,7 +5,8 @@
 %===============================================================================
 % Evaluate function values on the surrogate model
 %===============================================================================
-function fout = surrogateEval(xin, surrogate)
+function [fout, mse] = surrogateEval(xin, surrogate)
+    mse = [];
     method = surrogate.method;
     nxin = size(xin,1);
     xlb = surrogate.scale.xlb;
@@ -66,6 +67,22 @@ function fout = surrogateEval(xin, surrogate)
             f = zeros(size(x,1),mf);
             for idx = 1:mf
                 f(:,idx) = predict(surrogate.gpm{idx}, x);
+            end
+            %-------------------------------------------------------------------
+        case 'dace'
+            mf = size(surrogate.dacemodel,2);
+            f = zeros(size(x,1),mf);
+            mse = zeros(size(x,1),mf);
+            for idx = 1:mf
+                if size(x,1) > 1
+                    [fpred, msepred] = predictor(x, surrogate.dacemodel{idx});
+                    f(:,idx) = fpred(:);
+                    mse(:,idx) = msepred(:);
+                elseif size(x,1) == 1
+                    [fpred, msepred] = predictor([x;x], surrogate.dacemodel{idx});
+                    f(:,idx) = fpred(1);
+                    mse(:,idx) = msepred(1);
+                end
             end
             %-------------------------------------------------------------------
         otherwise

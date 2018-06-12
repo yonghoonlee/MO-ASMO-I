@@ -93,6 +93,18 @@ function RequiredWebZips
 	zips(ind).folder = 'MFX8773_multiprod';
 	zips(ind).test = 'multiprod';
     %---------------------------------------------------------------------------
+    % zip 9
+	ind = ind + 1;
+	zips(ind).url = 'https://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/20355/versions/5/download/zip/variogram.zip';
+	zips(ind).folder = 'MFX20355_variogram';
+	zips(ind).test = 'variogram';
+    %---------------------------------------------------------------------------
+    % zip 10
+	ind = ind + 1;
+	zips(ind).url = 'https://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/10670/versions/4/download/zip/parseargs.zip';
+	zips(ind).folder = 'MFX10670_parseargs';
+	zips(ind).test = 'parseargs';
+    %---------------------------------------------------------------------------
     full_fun_path = which(mfilename('fullpath')); % obtain full function path
     outputdir = fullfile(fileparts(full_fun_path),'external');
     DownloadWebZips(zips,outputdir); % download and unzip
