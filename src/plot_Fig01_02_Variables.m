@@ -3,13 +3,14 @@
 % Main author: Yong Hoon Lee (ylee196@illinois.edu, yonghoonlee@outlook.com)
 % Link: https://github.com/yonghoonlee/MO-ASMO-I
 %===============================================================================
-% Plot Figure 01: Variables
+% Plot Figure 01-02: Variables
 %===============================================================================
-try % Open figure window
-    figure(fg1);
-catch
-    fg1 = figure('Color',[1 1 1]);
-end
+try figure(fg1); % Open figure window
+catch, fg1 = figure('Color',[1 1 1]); end; fg1.Position = [10 800 560 220];
+hold off;
+try figure(fg2); % Open figure window
+catch, fg1 = figure('Color',[1 1 1]); end; fg2.Position = [450 790 560 220];
+hold off;
 %-------------------------------------------------------------------------------
 % Prepare and normalize data from all stored high fidelity results
 xplot = [c07_PoolXFea; c27_valSurXFea];
@@ -29,7 +30,6 @@ cm = 0.6 + 0.4*plasma(nx);
 %-------------------------------------------------------------------------------
 % Plot design varaibles for all stored high fidelity results
 figure(fg1);
-subplot(2,1,1); hold off;
 for idx = 1:nx
     plot(1:mx, xplot(idx,:), '-', 'Color', cm(idx,:)); hold on;
 end
@@ -41,8 +41,7 @@ title(['[iteration ', num2str(k), ']'], ...
     'FontSize', (prob.plotpareto.fontsize - 2));
 %-------------------------------------------------------------------------------
 % Plot objective function variables for all stored high fidelity results
-figure(fg1);
-subplot(2,1,2); hold off;
+figure(fg2);
 for idx = 1:nf
     plot(1:mf, fplot(idx,:), '-', 'Color', cm(idx,:)); hold on;
 end
@@ -68,7 +67,7 @@ fplot = (fplot - repmat(reshape(prob.bound.flb,1,mf),nf,1)) ...
 cm = plasma(nx);
 %-------------------------------------------------------------------------------
 % Plot design variables for current predicted Pareto set
-figure(fg1); subplot(2,1,1);
+figure(fg1);
 for idx = 1:nx
     plot(1:mx, xplot(idx,:), '-', 'Color', cm(idx,:), ...
         'LineWidth', 2); hold on;
@@ -76,19 +75,25 @@ end
 axis([1, mx, 0, 1]); ax = gca; ax.XTick = linspace(1,mx,mx);
 %-------------------------------------------------------------------------------
 % Plot objective function variables for current predicted Pareto set
-figure(fg1); subplot(2,1,2);
+figure(fg2);
 for idx = 1:nf
     plot(1:mf, fplot(idx,:), '-', 'Color', cm(idx,:), ...
         'LineWidth', 2); hold on;
 end
 axis([1, mf, 0, 1]); ax = gca; ax.XTick = linspace(1,mf,mf);
 %-------------------------------------------------------------------------------
-figure(fg1);
 if (prob.control.plotexport)
+    figure(fg1);
     eval(['export_fig ''', ...
         fullfile( ...
             prob.control.plotpath, [ ...
                 prob.control.case, '_fig01_iter', num2str(k,'%04d')] ...
+        ), ''' -pdf']);
+    figure(fg2);
+    eval(['export_fig ''', ...
+        fullfile( ...
+            prob.control.plotpath, [ ...
+                prob.control.case, '_fig02_iter', num2str(k,'%04d')] ...
         ), ''' -pdf']);
 end
 %===============================================================================

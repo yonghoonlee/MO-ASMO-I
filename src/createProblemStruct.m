@@ -75,7 +75,7 @@ function prob = createProblemStruct(settingsfun,objfun,nonlconfun,casename)
         prob.highfidelity.parallel = false;
     end
     %---------------------------------------------------------------------------
-    prob.gamultiobj.optDO.PopulationSize = min(max(100,5*prob.nxvar),1000); % [100,1000]
+    %prob.gamultiobj.optDO.PopulationSize = min(max(100,5*prob.nxvar),1000); % [100,1000]
 end
 %===============================================================================
 function prob = defaultProblemStructure()
@@ -163,10 +163,10 @@ function prob = defaultProblemStructure()
         opt.Display = 'off';
     end
     optDO = gaoptimset(@gamultiobj);
-    optDO.PopulationSize = min(max(100,5*prob.nxvar),1000); % [1k,10k]
+    optDO.PopulationSize = min(max(1000,5*prob.nxvar),10000); % [1k,10k]
     optDO.CrossoverFraction = 0.25;
     optDO.ParetoFraction = 0.3;
-    optDO.Generations = 2000;
+    optDO.Generations = 1000;
     optDO.StallGenLimit = 20;
     optDO.TolFun = 5e-5;
     optDO.TolCon = 5e-5;

@@ -7,7 +7,6 @@
 %===============================================================================
 function R = runDO(settingsfun, objfun, nonlconfun, casefile, varargin)
     prob = createProblemStruct(settingsfun,objfun,nonlconfun,casefile);
-    R = createResultStruct(prob); % create result struct
     rng(prob.random.seed,prob.random.generator); % set random seed
     %---------------------------------------------------------------------------
     % load from MO-ASMO result
@@ -87,11 +86,12 @@ function R = runDO(settingsfun, objfun, nonlconfun, casefile, varargin)
     catch
         result.scrhistory = [];
     end
+    R = result;
     save(fullfile(prob.control.solpath, ...
-        [prob.control.case, '_final.mat']), 'result');
+        [prob.control.case, '_DOfinal.mat']), 'result');
     %---------------------------------------------------------------------------
     % Plot
-    plotPreparation;
+    %plotPreparation;
     plotDOFig01ParetoFrontier;
 end
 %===============================================================================

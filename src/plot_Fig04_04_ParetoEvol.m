@@ -3,17 +3,14 @@
 % Main author: Yong Hoon Lee (ylee196@illinois.edu, yonghoonlee@outlook.com)
 % Link: https://github.com/yonghoonlee/MO-ASMO-I
 %===============================================================================
-% Plot Figure 03: Pareto frontier evolution
+% Plot Figure 04: Pareto frontier evolution
 %===============================================================================
-try % Open figure window
-    figure(fg3);
-catch
-    fg3 = figure('Color',[1 1 1]);
-end
+try figure(fg4); % Open figure window
+catch, fg4 = figure('Color',[1 1 1]); end; fg4.Position = [1330 770 560 220];
 %-------------------------------------------------------------------------------
 cm = flipud(plasma(k));
 th = linspace(1,3,k);
-figure(fg3);
+figure(fg4);
 hold off;
 for idx = 1:k
     % Prepare data
@@ -39,12 +36,12 @@ cb.Ticks = 1:k;
 cb.Label.String = 'iteration number';
 cb.Label.Interpreter = 'latex';
 %-------------------------------------------------------------------------------
-figure(fg3);
 if (prob.control.plotexport)
+    figure(fg4);
     eval(['export_fig ''', ...
         fullfile( ...
             prob.control.plotpath, [ ...
-                prob.control.case, '_fig03_iter', num2str(k,'%04d')] ...
+                prob.control.case, '_fig04_iter', num2str(k,'%04d')] ...
         ), ''' -pdf']);
 end
 %===============================================================================

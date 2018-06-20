@@ -3,16 +3,12 @@
 % Main author: Yong Hoon Lee (ylee196@illinois.edu, yonghoonlee@outlook.com)
 % Link: https://github.com/yonghoonlee/MO-ASMO-I
 %===============================================================================
-% Plot Figure 04: Convergence
+% Plot Figure 05: Convergence metric 1, Eulerian distance error
 %===============================================================================
-try % Open figure window
-    figure(fg4);
-catch
-    fg4 = figure('Color',[1 1 1]);
-end
-%-------------------------------------------------------------------------------
-figure(fg4);
+try figure(fg5); % Open figure window
+catch, fg5 = figure('Color',[1 1 1]); end; fg5.Position = [30 540 560 220];
 hold off;
+%-------------------------------------------------------------------------------
 if k>1
     for idx = 2:k
         itr = [(idx-1), idx];
@@ -49,12 +45,12 @@ legend([ph1, ph2, ph3], ...
     {'largest error', 'average error', 'smallest error'}, ...
     'Location', 'northeast');
 %-------------------------------------------------------------------------------
-figure(fg4);
+figure(fg5);
 if (prob.control.plotexport)
     eval(['export_fig ''', ...
         fullfile( ...
             prob.control.plotpath, [ ...
-                prob.control.case, '_fig04_iter', num2str(k,'%04d')] ...
+                prob.control.case, '_fig05_iter', num2str(k,'%04d')] ...
         ), ''' -pdf']);
 end
 %===============================================================================

@@ -1,3 +1,10 @@
+%===============================================================================
+% Multiobjective Adaptive Surrogate Modeling-based Optimization Code I
+% Main author: Yong Hoon Lee (ylee196@illinois.edu, yonghoonlee@outlook.com)
+% Link: https://github.com/yonghoonlee/MO-ASMO-I
+%===============================================================================
+% Error evaluation
+%===============================================================================
 function [errorVec, errorAvg] = errorEvaluation(hffF, surF, prob, k, eH, surr)
     [nFea, mFea] = size(hffF);
     
@@ -29,3 +36,4 @@ function [errorVec, errorAvg] = errorEvaluation(hffF, surF, prob, k, eH, surr)
         errorAvg = sum(errorVec)/size(errorVec,1);
     end
 end
+%===============================================================================

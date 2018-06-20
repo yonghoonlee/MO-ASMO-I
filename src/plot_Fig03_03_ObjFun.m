@@ -3,13 +3,11 @@
 % Main author: Yong Hoon Lee (ylee196@illinois.edu, yonghoonlee@outlook.com)
 % Link: https://github.com/yonghoonlee/MO-ASMO-I
 %===============================================================================
-% Plot Figure 02: Pareto frontier in the objective space and validation point
+% Plot Figure 03: Pareto frontier in the objective space and validation point
 %===============================================================================
-try % Open figure window
-    figure(fg2);
-catch
-    fg2 = figure('Color',[1 1 1]);
-end
+try figure(fg3); % Open figure window
+catch, fg3 = figure('Color',[1 1 1]); end; fg3.Position = [890 780 560 220];
+hold off;
 %-------------------------------------------------------------------------------
 % Prepare data from current predicted Pareto set
 xplot1 = c18_parSurXFea;
@@ -33,8 +31,6 @@ fplot2 = xfhplot2(:,(mx2+1):(mx2+mf2));
 hplot2 = xfhplot2(:,(mx2+mf2+1):end);
 %-------------------------------------------------------------------------------
 % Plot objective function space
-figure(fg2);
-hold off;
 if (nx2>0)
     cm = plasma(nx2);
     switch lower(prob.plotpareto.type)
@@ -76,12 +72,12 @@ if (nx2>0)
         otherwise
     end
     %---------------------------------------------------------------------------
-    figure(fg2);
     if (prob.control.plotexport)
+        figure(fg3);
         eval(['export_fig ''', ...
             fullfile( ...
                 prob.control.plotpath, [ ...
-                    prob.control.case, '_fig02_iter', num2str(k,'%04d')] ...
+                    prob.control.case, '_fig03_iter', num2str(k,'%04d')] ...
             ), ''' -pdf']);
     end
 end

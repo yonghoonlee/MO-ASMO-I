@@ -3,12 +3,13 @@
 % Main author: Yong Hoon Lee (ylee196@illinois.edu, yonghoonlee@outlook.com)
 % Link: https://github.com/yonghoonlee/MO-ASMO-I
 %===============================================================================
-% Plot Figure 01 for DO: Pareto frontier in the objective space
+% Plot Figure 06 for DO: Pareto frontier in the objective space
 %===============================================================================
 try % Open figure window
-    figure(fg1);
+    figure(fg6);
 catch
-    fg1 = figure('Color',[1 1 1]);
+    fg6 = figure('Color',[1 1 1]);
+    fg6.Position = [470 110 560 420];
 end
 cm = plasma(5);
 %-------------------------------------------------------------------------------
@@ -48,12 +49,12 @@ catch
         'Location', 'best');
 end
 %-------------------------------------------------------------------------------
-figure(fg1);
+figure(fg6);
 if (prob.control.plotexport)
     eval(['export_fig ''', ...
         fullfile( ...
             prob.control.plotpath, [ ...
-                prob.control.case, '_fig01'] ...
+                prob.control.case, '_fig06'] ...
         ), ''' -pdf']);
 end
 %===============================================================================

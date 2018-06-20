@@ -180,12 +180,36 @@ function R = runMOASMO(settingsfun, objfun, nonlconfun, casefile, varargin)
         R.data.c36_parErrorAvg(k,1) = c36_parErrorAvg;
         R.time.c33_36(k,1) = toc;
         %-----------------------------------------------------------------------
+        % Compute convergence metrices
+        tic;
+        % 01-1: Hypervolume, Hypervolume Ratio
+        [R.data.c37_hypervolume(k,1), R.data.c38_hypervolumeRatio(k,1)] ...
+            = approxNDHypervolume(R.data.c19_parSurFFea{k,1}, ...
+                min(10*100^size(R.data.c19_parSurFFea{k,1},2),1000000));
+        % 01-2: Normalized Hypervolume Change
+        if (k > 1)
+            R.data.c39_changeHypervolume(k,1) = abs( ...
+                R.data.c37_hypervolume(k-1,1) - R.data.c37_hypervolume(k,1)) ...
+                / abs(max(R.data.c37_hypervolume(1:k)) ...
+                - min(R.data.c37_hypervolume(1:k)));
+            R.data.c40_changeHypervolumeRatio(k,1) = abs( ...
+                R.data.c38_hypervolumeRatio(k-1,1) ...
+                - R.data.c38_hypervolumeRatio(k,1)) ...
+                / abs(max(R.data.c38_hypervolumeRatio(1:k)) ...
+                - min(R.data.c38_hypervolumeRatio(1:k)));
+        else
+            R.data.c39_changeHypervolume(k,1) = 1;
+            R.data.c40_changeHypervolumeRatio(k,1) = 1;
+        end
+        R.time.c37_40(k,1) = toc;
+        %-----------------------------------------------------------------------
         % Plot intermediate solution
         if (prob.control.plot)
-            plotFig01Variables;
-            plotFig02ObjFun;
-            plotFig03ParetoEvol;
-            plotFig04Convergence;
+            plot_Fig01_02_Variables;
+            plot_Fig03_03_ObjFun;
+            plot_Fig04_04_ParetoEvol;
+            plot_Fig05_05_EulerianErrorConvergence;
+            plot_Fig06_07_Hypervolume;
         end
         %-----------------------------------------------------------------------
         % Save intermediate result
@@ -197,11 +221,11 @@ function R = runMOASMO(settingsfun, objfun, nonlconfun, casefile, varargin)
                 [prob.control.case, '_outeriter', num2str(outeriter,'%04d'), ...
                 '_innercase', num2str(innercase,'%04d'), ...
                 '_iter', num2str(k,'%04d'), '.mat']), ...
-                'result');
+                'result','-v7.3');
         else
             save(fullfile(prob.control.solpath, ...
                 [prob.control.case, '_iter', num2str(k,'%04d'), '.mat']), ...
-                'result');
+                'result','-v7.3');
         end
         %-----------------------------------------------------------------------
         % Termination condition check
@@ -222,6 +246,11 @@ function R = runMOASMO(settingsfun, objfun, nonlconfun, casefile, varargin)
         R.time.c01_01(k+1,1) = toc;
     end
     %---------------------------------------------------------------------------
+    % Plot final solution
+    if (prob.control.plot)
+        %
+    end
+    %---------------------------------------------------------------------------
     % Save final result
     clear result; result = R;    
     if (nargin == 6)
@@ -230,10 +259,10 @@ function R = runMOASMO(settingsfun, objfun, nonlconfun, casefile, varargin)
         save(fullfile(prob.control.solpath, ...
             [prob.control.case, '_outeriter', num2str(outeriter,'%04d'), ...
             '_innercase', num2str(innercase,'%04d'), '_final.mat']), ...
-            'result');
+            'result','-v7.3');
     else
         save(fullfile(prob.control.solpath, ...
-            [prob.control.case, '_final.mat']), 'result');
+            [prob.control.case, '_final.mat']), 'result','-v7.3');
     end
     [ndpop, ndscr, ndind] = ndSort(c07_PoolXFea, c08_PoolHffFFea);
     R.population = ndpop;
