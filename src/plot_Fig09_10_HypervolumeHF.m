@@ -3,18 +3,18 @@
 % Main author: Yong Hoon Lee (ylee196@illinois.edu, yonghoonlee@outlook.com)
 % Link: https://github.com/yonghoonlee/MO-ASMO-I
 %===============================================================================
-% Plot Figure 06-07: Hypervolume metric and Hypervolume metric convergence
+% Plot Figure 09-10: Hypervolume metric HF and Hypervolume HF metric convergence
 %===============================================================================
-try figure(fg6); % Open figure window
-catch, fg6 = figure('Color',[1 1 1]); end; fg6.Position = [460 540 560 220];
+try figure(fg9); % Open figure window
+catch, fg9 = figure('Color',[1 1 1]); end; fg9.Position = [50 300 560 220];
 hold off;
-try figure(fg7); % Open figure window
-catch, fg7 = figure('Color',[1 1 1]); end; fg7.Position = [890 530 560 220];
+try figure(fg10); % Open figure window
+catch, fg10 = figure('Color',[1 1 1]); end; fg10.Position = [480 290 560 220];
 hold off;
 %-------------------------------------------------------------------------------
-figure(fg6);
+figure(fg9);
 yyaxis left;
-ph1 = plot([1:k]',R.data.c37_hypervolume(1:k), ...
+ph1 = plot([1:k]',R.data.c41_hypervolumeHF(1:k), ...
     'ks-','MarkerFaceColor','k','LineWidth',2);
 hold on;
 ax = gca; ax.FontSize = prob.plotpareto.fontsize; ax.YColor = [0 0 0];
@@ -22,7 +22,7 @@ xlabel('iteration', 'FontSize', prob.plotpareto.fontsize);
 ylabel('hypervolume size', 'FontSize', prob.plotpareto.fontsize);
 %-------------------------------------------------------------------------------
 yyaxis right;
-ph2 = plot([1:k]',R.data.c38_hypervolumeRatio(1:k), ...
+ph2 = plot([1:k]',R.data.c42_hypervolumeRatioHF(1:k), ...
     'rd-','MarkerFaceColor','r','LineWidth',2);
 hold on;
 ax = gca; ax.FontSize = prob.plotpareto.fontsize; ax.YColor = [0 0 0];
@@ -33,10 +33,12 @@ legend([ph1, ph2], ...
     {'HV size', 'HV ratio'}, ...
     'Location','northeast','Box','off','Color','none');
 %-------------------------------------------------------------------------------
-figure(fg7);
+figure(fg10);
 % Hypervolume
-ph3data1 = R.data.c39_changeHypervolume(1:k);
-ph3data2 = R.data.c40_changeHypervolumeRatio(1:k);
+ph3data1 = R.data.c43_changeHypervolumeHF(1:k);
+ph3data2 = R.data.c44_changeHypervolumeRatioHF(1:k);
+ph3data1(ph3data1<1e-6) = 1e-6;
+ph3data2(ph3data2<1e-6) = 1e-6;
 ph3 = semilogy(1:k,ph3data1,'ks-','LineWidth',2, ...
     'MarkerFaceColor','k','MarkerEdgeColor','none','MarkerSize',9); hold on;
 ph4 = semilogy(1:k,ph3data2,'rd-','LineWidth',2, ...
@@ -85,17 +87,17 @@ legend([ph6, ph3, ph4], ...
     'Location', 'southwest','Box','off','Color','none');
 %-------------------------------------------------------------------------------
 if (prob.control.plotexport)
-    figure(fg6);
+    figure(fg9);
     eval(['export_fig ''', ...
         fullfile( ...
             prob.control.plotpath, [ ...
-                prob.control.case, '_fig06_iter', num2str(k,'%04d')] ...
+                prob.control.case, '_fig09_iter', num2str(k,'%04d')] ...
         ), ''' -pdf']);
-    figure(fg7);
+    figure(fg10);
     eval(['export_fig ''', ...
         fullfile( ...
             prob.control.plotpath, [ ...
-                prob.control.case, '_fig07_iter', num2str(k,'%04d')] ...
+                prob.control.case, '_fig10_iter', num2str(k,'%04d')] ...
         ), ''' -pdf']);
 end
 %===============================================================================

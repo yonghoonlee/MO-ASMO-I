@@ -6,7 +6,7 @@
 % Plot Figure 04: Pareto frontier evolution
 %===============================================================================
 try figure(fg4); % Open figure window
-catch, fg4 = figure('Color',[1 1 1]); end; fg4.Position = [1330 770 560 220];
+catch, fg4 = figure('Color',[1 1 1]); end; fg4.Position = [1300 770 560 220];
 %-------------------------------------------------------------------------------
 cm = flipud(plasma(k));
 th = linspace(1,3,k);

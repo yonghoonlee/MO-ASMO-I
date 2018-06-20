@@ -6,7 +6,7 @@
 % Plot Figure 03: Pareto frontier in the objective space and validation point
 %===============================================================================
 try figure(fg3); % Open figure window
-catch, fg3 = figure('Color',[1 1 1]); end; fg3.Position = [890 780 560 220];
+catch, fg3 = figure('Color',[1 1 1]); end; fg3.Position = [870 780 560 220];
 hold off;
 %-------------------------------------------------------------------------------
 % Prepare data from current predicted Pareto set

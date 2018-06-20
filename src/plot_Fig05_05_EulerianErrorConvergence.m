@@ -6,7 +6,7 @@
 % Plot Figure 05: Convergence metric 1, Eulerian distance error
 %===============================================================================
 try figure(fg5); % Open figure window
-catch, fg5 = figure('Color',[1 1 1]); end; fg5.Position = [30 540 560 220];
+catch, fg5 = figure('Color',[1 1 1]); end; fg5.Position = [30 550 560 220];
 hold off;
 %-------------------------------------------------------------------------------
 if k>1

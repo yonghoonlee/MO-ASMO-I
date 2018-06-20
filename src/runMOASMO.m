@@ -182,11 +182,11 @@ function R = runMOASMO(settingsfun, objfun, nonlconfun, casefile, varargin)
         %-----------------------------------------------------------------------
         % Compute convergence metrices
         tic;
-        % 01-1: Hypervolume, Hypervolume Ratio
+        % 01-1: Hypervolume, Hypervolume Ratio in Predicted Pareto Set
         [R.data.c37_hypervolume(k,1), R.data.c38_hypervolumeRatio(k,1)] ...
             = approxNDHypervolume(R.data.c19_parSurFFea{k,1}, ...
                 min(10*100^size(R.data.c19_parSurFFea{k,1},2),1000000));
-        % 01-2: Normalized Hypervolume Change
+        % 01-2: Normalized Hypervolume Change in Predicted Pareto Set
         if (k > 1)
             R.data.c39_changeHypervolume(k,1) = abs( ...
                 R.data.c37_hypervolume(k-1,1) - R.data.c37_hypervolume(k,1)) ...
@@ -201,7 +201,28 @@ function R = runMOASMO(settingsfun, objfun, nonlconfun, casefile, varargin)
             R.data.c39_changeHypervolume(k,1) = 1;
             R.data.c40_changeHypervolumeRatio(k,1) = 1;
         end
-        R.time.c37_40(k,1) = toc;
+        % 02-1: Hypervolume, Hypervolume Ratio in Pareto Set of HF Results
+        [~,ndFHF,ndiHF] = ndSort(c07_PoolXFea,c08_PoolHffFFea);
+        [R.data.c41_hypervolumeHF(k,1), R.data.c42_hypervolumeRatioHF(k,1)] ...
+            = approxNDHypervolume(ndFHF(ndiHF==1,:), ...
+            	min(10*100^size(R.data.c19_parSurFFea{k,1},2),1000000));
+        % 02-2: Normalized Hypervolume Change in Pareto Set of HF Results
+        if (k > 1)
+            R.data.c43_changeHypervolumeHF(k,1) = abs( ...
+                R.data.c41_hypervolumeHF(k-1,1) - R.data.c41_hypervolumeHF(k,1)) ...
+                / abs(max(R.data.c41_hypervolumeHF(1:k)) ...
+                - min(R.data.c41_hypervolumeHF(1:k)));
+            R.data.c44_changeHypervolumeRatioHF(k,1) = abs( ...
+                R.data.c42_hypervolumeRatioHF(k-1,1) ...
+                - R.data.c42_hypervolumeRatioHF(k,1)) ...
+                / abs(max(R.data.c42_hypervolumeRatioHF(1:k)) ...
+                - min(R.data.c42_hypervolumeRatioHF(1:k)));
+        else
+        	R.data.c43_changeHypervolumeHF(k,1) = 1;
+        	R.data.c44_changeHypervolumeRatioHF(k,1) = 1;
+        end
+        clear ndFHF ndiHF
+        R.time.c37_44(k,1) = toc;
         %-----------------------------------------------------------------------
         % Plot intermediate solution
         if (prob.control.plot)
@@ -210,6 +231,8 @@ function R = runMOASMO(settingsfun, objfun, nonlconfun, casefile, varargin)
             plot_Fig04_04_ParetoEvol;
             plot_Fig05_05_EulerianErrorConvergence;
             plot_Fig06_07_Hypervolume;
+            plot_Fig08_HFParetoSet;
+            plot_Fig09_10_HypervolumeHF;
         end
         %-----------------------------------------------------------------------
         % Save intermediate result

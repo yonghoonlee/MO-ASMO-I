@@ -9,7 +9,7 @@ try figure(fg1); % Open figure window
 catch, fg1 = figure('Color',[1 1 1]); end; fg1.Position = [10 800 560 220];
 hold off;
 try figure(fg2); % Open figure window
-catch, fg1 = figure('Color',[1 1 1]); end; fg2.Position = [450 790 560 220];
+catch, fg1 = figure('Color',[1 1 1]); end; fg2.Position = [440 790 560 220];
 hold off;
 %-------------------------------------------------------------------------------
 % Prepare and normalize data from all stored high fidelity results
